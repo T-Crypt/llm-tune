@@ -15,8 +15,10 @@ wire down part of it.
   treat it as "about" and read the value on the actual machine.
   Community source: https://github.com/blaine-hiers/headroom/issues/13
 - Worked example (community-reported, not measured here): a 24 GB Mac defaults to about 16 GB
-  available to the GPU. Raising the limit to 20 GB is a common, workable setting — it leaves
-  several GB for macOS.
+  available to the GPU. Raising the limit to 20 GB is a commonly used setting for a 24 GB Mac in
+  general — it leaves several GB for macOS. It is **not** a figure reported for any particular
+  model; do not present it as one. The model example below happens to need a raised limit, and
+  20 GB is the general setting used to show the arithmetic.
 - Read the real current limit, do not assume it:
   - `sysctl iogpu.wired_limit_mb`
   - `python -c "import mlx.core as mx; print(mx.metal.device_info())"` →

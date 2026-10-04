@@ -18,6 +18,12 @@ user's own box before quoting any figure as theirs.
 Detail lives in `references/tables/` and `references/findings.md`; cite them when you make a
 claim. `references/CORRECTIONS.md` wins over `references/findings.md` where they differ.
 
+**Claim discipline:** every number or behaviour you state must come from a table, a finding, or
+a cited source. Anything you infer must be said as inferred — "I expect", "derived, not
+measured", "on this architecture it is likely" — and never written as a measurement. Do not
+extend a measured fact into a mechanism the data does not show (for example, a separate
+allocation that can OOM is measured; that it grows during generation is not).
+
 ## 1. Intake
 
 Ask, in this order, before recommending anything:
@@ -36,6 +42,11 @@ Ask, in this order, before recommending anything:
 8. **What "good" means to them** — tok/s, answer quality, recall at depth, tool-call
    reliability, or "it stops crashing". Pick the metric before tuning; the metric decides
    which trade is worth making.
+
+**When to ask and when to answer:** if the user has already given most of these facts, answer at
+once and state the assumptions you are making at the top of the answer, then ask only for what is
+still missing. If a key fact is missing — GPU/VRAM, system RAM, or the engine — ask first, because
+the whole procedure depends on it.
 
 Then read the engine's own memory accounting (its load log: model file, KV buffer, compute
 buffer, draft head) before applying any arithmetic from this skill.
@@ -126,7 +137,9 @@ Run the steps in order. Each step: the rule, the evidence, the trap, how to veri
   workload-dependent: on the measured engine, 3 draft tokens was best overall (mean 107.9 t/s),
   5 best prose (140.0), 3 best code (94.8); the LM-head draft was worth ~11.8 t/s.
 - **Evidence:** `references/tables/speculative-mtp.md` T1–T5; findings 2 (corrected), 11, 12, 13.
-- **Trap:** the draft context can OOM even when the target model fits. MTP compatibility depends
+- **Trap:** the draft context is a separate allocation that can OOM even when the target model
+  fits — that is the measured fact. Do not claim it grows during generation; the measured runtime
+  growth is the compute buffers (finding 5). MTP compatibility depends
   on exact builder/commit — flag names changed between builds (`--draft-max` removed →
   `--spec-draft-n-max`), so pin versions. Auto-fit and manual offload are mutually exclusive:
   `common_fit_params` aborts when `-ngl` is already set.
@@ -134,24 +147,35 @@ Run the steps in order. Each step: the rule, the evidence, the trap, how to veri
 
 ### Step 7 — Sampling and reasoning budget
 
-- **Rule:** follow the model's own vendor spec, not generic house style. For the measured
-  thinking model: temp 1.0, top_p 0.95, top_k 20, min_p 0, rep_pen 1.0, presence 0.0. Cap the
-  reasoning budget per role — never `-1`. Keep temp ≤ 1.0 on MTP files and repetition_penalty
-  exactly 1.0 (raising it degrades MTP).
+- **Rule, in this order:**
+  1. Read **this model's own card**: its recommended sampling, whether it has a thinking mode
+     at all, and whether thinking is a toggle. Never reuse another model's numbers — house-style
+     defaults are not a spec.
+  2. The values below are one hybrid thinking model's vendor spec (the evidence base). Example
+     only, not a default for any other model: temp 1.0, top_p 0.95, top_k 20, min_p 0,
+     rep_pen 1.0, presence 0.0.
+  3. Reasoning-budget rules apply **only where a thinking mode exists**. Cap it per role, never
+     `-1`. A model with no thinking mode has no budget to cap and nothing to turn on.
+  4. On MTP files keep temp ≤ 1.0 and repetition_penalty exactly 1.0 (raising rep_pen degrades
+     MTP). This is about the file, not about thinking.
 - **Evidence:** findings 14, 15, and `references/tables/quality-bench.md` T10 (same model, same
   harness: 11/12 with a budget, 0/12 with the budget removed — a 32,000-token run that hit the
   length cap and produced nothing reviewable).
-- **Trap:** `reasoning_effort=medium` is a silent mode that injects nothing; only the default
-  (xhigh) injects reasoning instructions, and an invalid value hard-fails template render.
-  `--jinja` is required for template-driven reasoning kwargs to work at all.
-- **Verify:** finish_reason per run. `finish=length` with no output is a budget failure, not a
+- **Trap:** on models whose template implements a `reasoning_effort` switch, `medium` is a silent
+  mode that injects nothing, only the default (xhigh) injects reasoning instructions, and an
+  invalid value hard-fails the template render. `--jinja` is required for template-driven kwargs
+  to work at all. None of this applies to a model that has no such switch.
+- **Verify:** finish_reason per run. `finish=length` with no content is a budget failure, not a
   model failure — several models scored 0/8 in round 1 for exactly that.
 
 ### Step 8 — Harness and client settings
 
 - **Rule:** the harness is a tunable. Tool-call parsing tolerance turned 5/16 failures into 0/16
-  without touching the model. Keep thinking on for agent roles — thinking-off made Qwen-class
-  models skip the tool call entirely. Client context cap = served window.
+  without touching the model. For agent roles, keep thinking on **on models that have a thinking
+  mode** — thinking-off made Qwen-class models skip the tool call entirely. A non-thinking
+  (Instruct) variant has nothing to turn on: check its template for whether thinking is a toggle
+  before recommending it, and judge it on tool-call reliability instead. Client context cap =
+  served window.
 - **Evidence:** `references/tables/harness-toolcall.md` T1, T2; findings 16, 17, 28.
 - **Trap:** single-turn evals can score 24/24 while the same model fails a real multi-turn
   build. Evaluate multi-turn, in two tiers: a quick proxy for iteration, program-verifier tasks
@@ -172,6 +196,7 @@ Run the steps in order. Each step: the rule, the evidence, the trap, how to veri
   16 GB for the GPU; raising it to 20 GB is a common, workable setting.
   `mlx-community/Qwen3-Coder-30B-A3B-Instruct-4bit` is 16.0 GiB of weights — it does not fit the
   default ~16 GB limit, and fits at 20 GB with about 4 GB left for KV and overhead, which is tight.
+  The 20 GB is the general setting for a 24 GB Mac, not a figure reported for that model.
 - **Trap:** weights are not the working set. KV and engine overhead compete for the same pool,
   so a quant that fits on paper can fail on load. Confirm with a real load plus the bench, never
   by arithmetic alone.
@@ -208,9 +233,15 @@ One line each, from the data:
   mid-inference as buffers grow with depth.
 - Windows silently spills VRAM overflow into system RAM and decodes 10–20% slower than Linux on
   the same card; fail loudly instead.
-- `--reasoning-budget -1` produces 20k-token thinking loops with no output.
-- `reasoning_effort=medium` injects nothing; an invalid effort value hard-fails the template.
-- Thinking-off makes Qwen-class models skip the tool call.
+- Sampling numbers do not transfer between models. Read this model's card; a vendor spec for one
+  thinking model is not a default for an Instruct variant.
+- `--reasoning-budget -1` produces 20k-token thinking loops with no output — on models that have
+  a thinking mode. A model without one has no budget to cap.
+- `reasoning_effort=medium` injects nothing; an invalid effort value hard-fails the template —
+  only on models whose template implements that switch.
+- Thinking-off makes Qwen-class models skip the tool call. This applies to models with a thinking
+  mode; a non-thinking (Instruct) variant has nothing to turn on, so check its template before
+  recommending the setting.
 - A client cap larger than the served window overfills the server (400 or silent clipping).
 - Flag defaults drift from deployed behaviour; flag names change between builds.
 - Cross-engine advice does not transfer: SGLang/vLLM/ExLlama recipes do not apply to llama.cpp,

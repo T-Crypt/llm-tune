@@ -9,7 +9,7 @@ Builds a filler haystack, plants one fact at each requested depth, asks the mode
 report it, and prints one JSON line per depth: prompt size, seconds, recall, and status.
 
   python3 needle.py --url http://127.0.0.1:8080/v1/chat/completions --model local \
-      --depths 0.10,0.50,0.90 --lines 6000 --fact "build 751866"
+      --depths 0.10,0.50,0.90 --lines 6000 --fact "ZX-751866"
 
 Status meanings:
   ok      - answered within the token budget
