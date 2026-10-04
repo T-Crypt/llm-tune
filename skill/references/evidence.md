@@ -13,6 +13,7 @@ the source measurements are cited by repo-relative path inside each table file.
 | 6. Speculative / MTP | `references/tables/speculative-mtp.md` T1–T6 | 2 (corrected), 11, 12, 13, 24 | Acceptance gate >= 0.4; below ~50% regular quants win. Depth optimum is workload-dependent. |
 | 7. Sampling / reasoning budget | `references/tables/quality-bench.md` T10 (budget held vs removed), T11 (repeats) | 14, 15, 16 | Vendor spec beats house style; medium effort is a silent mode; -1 loops. |
 | 8. Harness / client | `references/tables/harness-toolcall.md` T1–T3; `references/tables/quality-bench.md` T14, T15 | 17, 18, 28 | Parser tolerance changed 5/16 to 0/16 with the model untouched. |
+| 9. Apple Silicon / MLX | `references/apple-mlx.md` — documented, not measured | none | No Apple Silicon run exists in this repo. Facts come from the MLX docs and one community source, listed below. |
 | Verification method | `references/tables/quality-bench.md` T7 (repeat runs), T11, T13 (DeepSWE), T14, T15 | 18, 19, 29, 30 | Two tiers: quick proxy for iteration, program verifiers for promotion. |
 
 Corrections that override findings: `references/CORRECTIONS.md` #2 (MTP cost is not a tier step),
@@ -27,3 +28,19 @@ architecture and KV type).
 Method that transfers: read the engine's own buffer log; budget KV + compute + mmproj + draft
 context; check recall at depth; hold quality constant before claiming speed; repeat runs and
 alternate arms; one model on the GPU at a time; publish corrections; pin versions.
+
+## Sources for the unmeasured Apple Silicon / MLX section
+
+- MLX docs, wired limit: https://ml-explore.github.io/mlx/build/html/python/_autosummary/mlx.core.set_wired_limit.html
+  (`iogpu.wired_limit_mb`, default 0 = derived from installed RAM, raise with
+  `sudo sysctl iogpu.wired_limit_mb=<MB>`, limit "should remain strictly less than the total
+  memory size", `mx.metal.device_info()` for `max_recommended_working_set_size` and `memory_size`).
+- Community source for the default fractions and the 24 GB worked example:
+  https://github.com/blaine-hiers/headroom/issues/13 — about 2/3 of RAM at 36 GB or less, about
+  3/4 above; sources disagree on exact figures for large machines. The reboot reset, the
+  `/etc/sysctl.conf` persistence, and the older `debug.iogpu.wired_limit` (bytes, Ventura /
+  Monterey) are community-reported and unverified.
+- Hugging Face API used by `bench/mlx_quant_search.py`:
+  `https://huggingface.co/api/models?author=mlx-community&search=<name>&limit=50&expand[]=safetensors&expand[]=downloads`
+  (brackets URL-encoded as `%5B%5D`) and `https://huggingface.co/api/models/<repo_id>/tree/main`.
+  Verified example: `mlx-community/Qwen3-Coder-30B-A3B-Instruct-4bit` = 16.0 GiB of weights.

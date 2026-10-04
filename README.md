@@ -8,17 +8,20 @@ Smart-Launcher, generic hardware-heuristic skills), llm-tune is QUALITY-aware:
 it recommends settings backed by measured evidence — recall at depth, bench
 scores, agent/harness behaviour, and documented failure modes and traps.
 
-Status: **flight 3: skill v0.1** — the skill is written against the measured evidence.
-Local until tested; nothing is released. Every number is from one machine class (24 GB
-card, 31 GB RAM), so the skill hands the user a bench to run on their own box.
+Status: **flight 5: skill v0.2** — written against the measured evidence, bench fixes from a
+live run on 2026-10-05, plus an Apple Silicon / MLX section that is documented from cited
+sources and not measured here. Local until tested; nothing is released. Every measured number
+is from one machine class (24 GB card, 31 GB RAM), so the skill hands the user a bench to run
+on their own box.
 
 ## Layout
 
 | Path | Contents |
 |---|---|
 | `skill/SKILL.md` | The skill: intake, decision procedure, verification, traps, what it does not know |
-| `skill/bench/` | The user-side bench — commands to run on their own hardware |
+| `skill/bench/` | The user-side bench — commands plus three stdlib scripts (needle, quality probe, MLX fit estimate) |
 | `skill/references/evidence.md` | Index from each decision step to the tables and findings behind it |
+| `skill/references/apple-mlx.md` | Apple Silicon / MLX — documented from cited sources, not measured here |
 | `data/INVENTORY.md` | Catalogue of the source evidence: what was measured, how, headline numbers, usefulness tag |
 | `skill/references/findings.md` | The most generalisable lessons pulled from the inventory |
 | `skill/references/tables/` | Measurements extracted from the DATA-tagged sources, one table per measurement set |

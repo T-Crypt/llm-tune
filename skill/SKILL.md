@@ -23,7 +23,8 @@ claim. `references/CORRECTIONS.md` wins over `references/findings.md` where they
 Ask, in this order, before recommending anything:
 
 1. **GPU model and VRAM** — the exact card, not "a big NVIDIA". Note whether the desktop
-   compositor shares the card.
+   compositor shares the card. On Apple Silicon, ask the Mac model, the chip, the unified
+   memory size, and the macOS version: the GPU's wired limit, not total RAM, is the budget.
 2. **System RAM** — this is a first-class budget on MoE / expert-cache engines, not a footnote.
 3. **OS** — Windows and Linux behave differently on the same card (see Traps).
 4. **Engine and version** — llama.cpp build, llama-swap, Ollama, LM Studio, vLLM. Flag names
@@ -157,6 +158,26 @@ Run the steps in order. Each step: the rule, the evidence, the trap, how to veri
   for promotion.
 - **Verify:** run the same task set with the parser change only, model and flags held constant.
 
+### Step 9 — Apple Silicon (MLX): documented, not measured here
+
+- **Rule:** the budget is the wired limit, not total RAM. `iogpu.wired_limit_mb` is the system
+  limit; `0` (default) means macOS derives it from installed RAM — community guides report about
+  2/3 of RAM at 36 GB or less and about 3/4 above, and sources disagree on large machines. Read
+  the machine's own value: `sysctl iogpu.wired_limit_mb`, and
+  `python -c "import mlx.core as mx; print(mx.metal.device_info())"` for
+  `max_recommended_working_set_size` and `memory_size`.
+- **Raise it in steps:** `sudo sysctl iogpu.wired_limit_mb=<MB>`, kept strictly under total RAM
+  (practitioners stop around 85–90%), with other apps closed. It resets on reboot.
+- **Worked example (community-reported, not measured here):** a 24 GB Mac defaults to about
+  16 GB for the GPU; raising it to 20 GB is a common, workable setting.
+  `mlx-community/Qwen3-Coder-30B-A3B-Instruct-4bit` is 16.0 GiB of weights — it does not fit the
+  default ~16 GB limit, and fits at 20 GB with about 4 GB left for KV and overhead, which is tight.
+- **Trap:** weights are not the working set. KV and engine overhead compete for the same pool,
+  so a quant that fits on paper can fail on load. Confirm with a real load plus the bench, never
+  by arithmetic alone.
+- **Verify:** `bench/mlx_quant_search.py` for the estimate, then a real load. Sources and detail:
+  `references/apple-mlx.md`.
+
 ## 3. Verification
 
 Before any claim of "this setting helped":
@@ -173,6 +194,9 @@ Before any claim of "this setting helped":
    up. A run was spoiled by a background session loading a model mid-sweep.
 6. **Publish corrections** rather than deleting a wrong number — three overstated VRAM figures
    were re-measured and kept as dated corrections.
+7. **Grade BUDGET separately from fail.** `finish_reason: length` with an empty answer is a
+   settings failure, not a model failure — a thinking model can spend the whole answer cap on
+   reasoning and return nothing. Fix the budget before reading the pass rate.
 
 ## 4. Traps
 
@@ -221,6 +245,9 @@ the user's version before recommending one.
   the quality-held-constant method, the recall-at-depth check, the harness traps, the pin-your-
   version rule. What does not: any t/s, GiB, or acceptance figure measured under a different
   engine. The Strata and NInfer numbers in `references/tables/` are engine-specific and marked as such.
+- **Apple Silicon / MLX is documented, not measured here.** The wired-limit facts, the default
+  fractions, and the 24 GB worked example come from the cited sources in `references/apple-mlx.md`;
+  nothing in this repo has run on an Apple Silicon machine.
 - **Long-horizon quality:** perplexity and planted-bug review are proxies; nothing here measures
   week-long agent behaviour.
 - **Local until tested:** this is v0.1, unreviewed outside the lab that produced it.

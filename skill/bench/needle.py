@@ -1,17 +1,23 @@
 #!/usr/bin/env python3
 """needle.py - recall at depth against an OpenAI-compatible endpoint.
 
-UNTESTED HERE: written from the method recorded in references/tables/context-recall.md,
-never executed in this repo. Stdlib only.
+Stdlib only. Written from the method recorded in references/tables/context-recall.md.
+The str.format crash below was found by a live run against a server on 2026-10-05; this
+version fixes it and adds BUDGET reporting, but has not been re-run here.
 
 Builds a filler haystack, plants one fact at each requested depth, asks the model to
-report it, and prints one JSON line per depth: prompt size, seconds, recall yes/no.
+report it, and prints one JSON line per depth: prompt size, seconds, recall, and status.
 
   python3 needle.py --url http://127.0.0.1:8080/v1/chat/completions --model local \
       --depths 0.10,0.50,0.90 --lines 6000 --fact "build 751866"
 
-A depth that returns an error means the prompt exceeded the served window - that is a
-harness problem, not a model failure, and it is reported as such.
+Status meanings:
+  ok      - answered within the token budget
+  BUDGET  - finish_reason "length" with empty content: a settings failure, not a model
+            failure. Raise --max-tokens or cap the reasoning budget before blaming the model.
+  error   - the prompt exceeded the served window (HTTP 400) or the request failed.
+
+Works against any OpenAI-compatible server, including mlx_lm.server (flags untested here).
 """
 
 import argparse
@@ -20,13 +26,16 @@ import time
 import urllib.error
 import urllib.request
 
-FILLER = "{i:06d} INFO worker thread {i % 7} processed batch {i} in {i % 97} ms"
+
+def filler_line(i):
+    # Not str.format with an expression inside the braces: that raises KeyError.
+    return "%06d INFO worker thread %d processed batch %d in %d ms" % (i, i % 7, i, i % 97)
 
 
 def haystack(n_lines, plant):
-    lines = [FILLER.format(i=i) for i in range(n_lines)]
+    lines = [filler_line(i) for i in range(n_lines)]
     for idx in plant:
-        lines[idx] = "{i:06d} NOTE {fact}".format(i=idx, fact=plant[idx])
+        lines[idx] = "%06d NOTE %s" % (idx, plant[idx])
     return "\n".join(lines)
 
 
@@ -51,7 +60,7 @@ def main():
     p.add_argument("--depths", default="0.10,0.50,0.90", help="comma-separated fractions")
     p.add_argument("--lines", type=int, default=6000, help="haystack lines per prompt")
     p.add_argument("--fact", default="build 751866", help="the planted value")
-    p.add_argument("--max-tokens", type=int, default=200)
+    p.add_argument("--max-tokens", type=int, default=4096)
     p.add_argument("--temperature", type=float, default=0.0)
     p.add_argument("--timeout", type=int, default=300)
     a = p.parse_args()
@@ -69,19 +78,28 @@ def main():
         }
         r, secs, err = post(a.url, body, a.timeout)
         if err:
-            print(json.dumps({"depth": depth, "error": err, "seconds": round(secs, 1)}))
+            print(json.dumps({"depth": depth, "status": "error", "error": err,
+                              "seconds": round(secs, 1)}))
             continue
+        choice = r["choices"][0]
+        msg = choice.get("message") or {}
+        content = msg.get("content") or ""
+        reasoning = msg.get("reasoning_content") or ""
         usage = r.get("usage", {})
         pt = usage.get("prompt_tokens", 0)
-        ans = (r["choices"][0].get("message") or {}).get("content") or ""
+        finish = choice.get("finish_reason")
+        status = "BUDGET" if finish == "length" and not content else "ok"
         print(json.dumps({
             "depth": depth,
             "prompt_lines": a.lines,
             "prompt_tokens": pt,
             "prefill_tps": round(pt / secs, 1) if secs and pt else None,
             "seconds": round(secs, 1),
-            "finish": r["choices"][0].get("finish_reason"),
-            "recall": "yes" if a.fact in ans else "no",
+            "finish": finish,
+            "content_chars": len(content),
+            "reasoning_chars": len(reasoning),
+            "recall": "yes" if a.fact in (content or reasoning) else "no",
+            "status": status,
         }))
 
 
