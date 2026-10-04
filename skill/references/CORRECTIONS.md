@@ -1,6 +1,6 @@
 # Corrections (flight 2)
 
-Where a number in `data/FINDINGS-DRAFT.md` disagreed with the extracted tables. Findings updated in place; original claim kept here.
+Where a number in `findings.md` disagreed with the extracted tables. Findings updated in place; original claim kept here.
 
 | # | Finding | Old claim | New claim | Source |
 |---|---|---|---|---|

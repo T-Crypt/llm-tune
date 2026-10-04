@@ -134,7 +134,12 @@ Source: `state/evals/2026-10-03/strata-pr646/ab.log`.
 |---|---|---|---|
 | 131K int8 (live install v0.1.33) | 142 | 162 | 138 |
 | 262K q4_0 (live install v0.1.33) | 129.1 | 141.4 | 122.1 |
-| 512K live check | 131.8 | 157.9 | 133.1 |
+| 512K live check (0.1.38 + #646 + #700) | 131.8 | 157.9 | 133.1 |
 | 262K config, same live check | 139.5 | 154.3 | 133.6 |
+| 512K, 0.1.39 headroom 4 (default) | 142.2 | 155.2 | 140.4 |
+| 512K, 0.1.39 headroom 6 (deployed) | 132.2 | 154.5 | 138.1 |
 
-Source: `state/evals/2026-10-03/strata-ctx/RESULTS.md`, `state/evals/2026-10-03/strata-512k-live/RESULTS.md`.
+Run-to-run spread inside each arm is +-20 t/s, so short-prompt decode is a wash; the long-prompt
+difference is the one that held across depths.
+
+Source: `state/evals/2026-10-03/strata-ctx/RESULTS.md`, `state/evals/2026-10-03/strata-512k-live/RESULTS.md`, `state/evals/2026-10-04/strata-0139-512k/RESULTS.md`.

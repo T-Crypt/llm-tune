@@ -98,3 +98,33 @@ Source: `state/evals/2026-10-02/r11-strata-iq2xs/results.jsonl`, `state/evals/20
 | q4 512k streamed yarn 2 | 12702 | 19.04 | 1.66 |
 
 Source: `state/evals/2026-10-03/strata-ctx/RESULTS.md`, `state/evals/2026-10-03/strata-k8v4/sweep.jsonl`.
+
+## Table 6 — CPU offload, measured (llama.cpp, 24 GB card, Windows box)
+
+| Entry | Offload setting | Decode t/s | Note |
+|---|---|---|---|
+| CyberTiel Q4_K_XL | `--n-cpu-moe` varied | 68–124 | higher offload = more headroom, less speed; per-setting values not recorded |
+| CyberTiel IQ4_XS | full GPU offload, no `--n-cpu-moe` | 234–245 | 23,624 MiB VRAM, 515 MiB headroom |
+
+Guidance recorded with the measurement: `--n-cpu-moe` is the only correct overflow lever, never
+`-ngl`; offloading the draft layer trades the MTP win away entirely. The idea that a partial
+offload "costs far more t/s than the quant gains back" is the source's expectation, not a
+measured result — the measured part is the direction (more offload, less speed).
+
+Source: `reference/LOCAL_MODELS.md` (CyberTiel measurements), `reference/llama-swap/TUNING-4090.md` (guidance).
+
+## Table 7 — host RAM headroom before and after an engine upgrade (Strata IQ2_XS, 512k, 31 GB class RAM box, engine-specific)
+
+| Arm | Page-locked RAM pinned (GiB) | Min MemAvailable at 477K prompt (GiB) | zram peak (GiB) | 477K read t/s | Decode t/s at depth |
+|---|---|---|---|---|---|
+| 0.1.38 + #646 + #700 (baseline) | 17.24 | 3.36 | 3.47 | 2,990 | 111.3 |
+| 0.1.39, headroom 4 (default) | 19.20 | **1.41** | 2.38 | 3,473 | 121.6 |
+| 0.1.39, headroom 6 (deployed) | n/a | 3.53 | 2.50 | 3,411 | 122.0 |
+
+The upgrade added a page-locked RAM copy for the prompt path's lent slots, sized to all but
+`STRATA_RESIDENT_HEADROOM_GIB` (default 4) of the RAM free at start. VRAM was unchanged (12,702
+expert slots, 17.02 GiB, ~385 MiB free). Arms were not interleaved — same box, same config.
+Headroom 6 restores 3.53 GiB and keeps most of the long-prompt gain (-12% read at 477K vs the
+default, +10% decode at depth). Recall held at all four depths on every arm.
+
+Source: `state/evals/2026-10-04/strata-0139-512k/RESULTS.md`.

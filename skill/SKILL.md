@@ -12,11 +12,11 @@ budget decisions (VRAM, host RAM, context, KV, draft head) followed by a quality
 **Evidence base:** every number here was measured on ONE machine class — a 24 GB RTX
 4090-class card, 31 GB class host RAM, llama.cpp b11115 / llama-swap v257, plus two
 expert-cache engines (Strata, NInfer). **Do not transfer a number to another card or RAM
-class.** Transfer the method and the traps, and run the bench in `skill/bench/` on the
+class.** Transfer the method and the traps, and run the bench in `bench/` on the
 user's own box before quoting any figure as theirs.
 
-Detail lives in `data/tables/` and `data/FINDINGS-DRAFT.md`; cite them when you make a
-claim. `data/CORRECTIONS.md` wins over `FINDINGS-DRAFT.md` where they differ.
+Detail lives in `references/tables/` and `references/findings.md`; cite them when you make a
+claim. `references/CORRECTIONS.md` wins over `references/findings.md` where they differ.
 
 ## 1. Intake
 
@@ -49,7 +49,7 @@ Run the steps in order. Each step: the rule, the evidence, the trap, how to veri
   context, not the file alone. On the measured card the non-file cost was 7.97 GiB at 131k
   ctx (0.87 mmproj + 4.25 KV + 2.85 residual, single measurement, breakdown unverified).
   A working gate value was 22,900 MiB on a 24,564 MiB card.
-- **Evidence:** `data/tables/vram-fit.md` T1–T3, `data/tables/kv-cache.md` T2; finding 1.
+- **Evidence:** `references/tables/vram-fit.md` T1–T3, `references/tables/kv-cache.md` T2; finding 1.
 - **Trap:** load-time fit is not runtime fit — IQ4_XS-MTP estimated 23.83/24.00 GiB and
   "does not fit in practice"; a Q4_K_XL entry loaded fine at 131k, peaked 24,142 MiB at
   152k and crashed mid-inference. Windows spills VRAM overflow into system RAM silently;
@@ -65,7 +65,7 @@ Run the steps in order. Each step: the rule, the evidence, the trap, how to veri
   GiB — dropping context buys a quant tier (131k→65k bought IQ3_M→Q4_K_M on the measured
   model). But declared context is not usable context: a request beyond the window returns 400
   unless the engine clips it.
-- **Evidence:** `data/tables/kv-cache.md` T1, T3; `data/tables/context-recall.md` T1 (the
+- **Evidence:** `references/tables/kv-cache.md` T1, T3; `references/tables/context-recall.md` T1 (the
   131k entry scored 0/3 at 120k depth with HTTP 400); findings 4, 7.
 - **Trap:** the client's context cap must match the served window — a hardcoded 262144 in the
   client overfilled a 131k server. Set the clip behaviour explicitly if a harness sends long
@@ -79,7 +79,7 @@ Run the steps in order. Each step: the rule, the evidence, the trap, how to veri
   state), so long context stayed cheap; on a hybrid MoE, 6 attention layers + 23 Mamba layers
   cost ~1.50 GiB KV + 46 MiB state at 262k. At 262k on the Strata engine, q4_0 KV beat int8 on
   every measured axis (decode, prompt speed, RAM headroom) with recall held at every depth.
-- **Evidence:** `data/tables/kv-cache.md` T1, T4, T5, T6; `data/tables/prefill-decode-speed.md`
+- **Evidence:** `references/tables/kv-cache.md` T1, T4, T5, T6; `references/tables/prefill-decode-speed.md`
   T5; findings 3, 6.
 - **Trap:** KV quality beyond needle recall was not measured — the upstream quality bench for
   q4 KV stops at 128k. Do not claim quality parity at 262k from a recall test alone.
@@ -88,15 +88,20 @@ Run the steps in order. Each step: the rule, the evidence, the trap, how to veri
 ### Step 4 — Offload and MoE
 
 - **Rule:** decode speed is architecture-bound, not quant-bound: MoE entries decoded 246–324
-  t/s while dense 27B entries decoded ~52–119 t/s on the same card. Partial CPU offload is
-  what happens when a quant does not fit, and it costs more t/s than the quant gains back.
-  On expert-cache engines, host RAM is the binding budget, not VRAM: 28,289 MiB (27.63 GiB)
-  host RAM peak on a 31 GB box, zram at the wall at 512k.
-- **Evidence:** `data/tables/prefill-decode-speed.md` T3; `data/tables/vram-fit.md` T4, T5;
-  findings 20, 27.
+  t/s while dense 27B entries decoded ~52–119 t/s on the same card. CPU offload is a deliberate
+  lever (`--n-cpu-moe`), not an automatic fallback, and the measured direction is: more offload
+  = more headroom, less speed (68–124 t/s across `--n-cpu-moe` settings on one MoE entry, vs
+  234–245 t/s fully on GPU). On expert-cache engines, host RAM is the binding budget, not VRAM:
+  28,289 MiB (27.63 GiB) host RAM peak on a 31 GB box, zram at the wall at 512k.
+- **Evidence:** `references/tables/prefill-decode-speed.md` T3; `references/tables/vram-fit.md`
+  T4, T5, T6, T7; findings 20, 27, 32.
 - **Trap:** heavy parallel builds next to a resident engine can OOM-freeze the box. Freeing the
-  desktop compositor to the iGPU is a real lever on a shared card.
-- **Verify:** peak host RAM and peak VRAM per run, plus the engine's slot/pinned figures.
+  desktop compositor to the iGPU is a real lever on a shared card. **Re-measure host RAM
+  headroom after every engine upgrade** — defaults that pin memory can change: an upgrade grew
+  the default page-locked copy from 17.24 to 19.20 GiB and cut min free RAM at a 477K prompt
+  from 3.36 to 1.41 GiB on the same box and config, with no change in VRAM.
+- **Verify:** peak host RAM and peak VRAM per run, plus the engine's slot/pinned figures, before
+  and after any engine upgrade.
 
 ### Step 5 — Prefill and ubatch
 
@@ -104,7 +109,7 @@ Run the steps in order. Each step: the rule, the evidence, the trap, how to veri
   27B (2186 t/s at both `-ub 512` and `-ub 1024`). Prefill chunk settings are hardware-class
   dependent: a chunk setting that gained +21% on a 128 GB RAM box cost 2.7–3.4x on the 31 GB
   box, because the bigger chunk's buffers come out of a cache that is already short.
-- **Evidence:** `data/tables/prefill-decode-speed.md` T4, T5; findings 9, 21.
+- **Evidence:** `references/tables/prefill-decode-speed.md` T4, T5; findings 9, 21.
 - **Trap:** a flag default can differ from deployed behaviour — int8 prefill activations were
   running while the flag documented a16; a rebuild without the flag lost ~40% prefill.
 - **Verify:** three runs per arm at the same prompt size, quality held constant. int8
@@ -119,7 +124,7 @@ Run the steps in order. Each step: the rule, the evidence, the trap, how to veri
   regular quants run faster, so have a documented fallback file. Optimal depth is
   workload-dependent: on the measured engine, 3 draft tokens was best overall (mean 107.9 t/s),
   5 best prose (140.0), 3 best code (94.8); the LM-head draft was worth ~11.8 t/s.
-- **Evidence:** `data/tables/speculative-mtp.md` T1–T5; findings 2 (corrected), 11, 12, 13.
+- **Evidence:** `references/tables/speculative-mtp.md` T1–T5; findings 2 (corrected), 11, 12, 13.
 - **Trap:** the draft context can OOM even when the target model fits. MTP compatibility depends
   on exact builder/commit — flag names changed between builds (`--draft-max` removed →
   `--spec-draft-n-max`), so pin versions. Auto-fit and manual offload are mutually exclusive:
@@ -132,7 +137,7 @@ Run the steps in order. Each step: the rule, the evidence, the trap, how to veri
   thinking model: temp 1.0, top_p 0.95, top_k 20, min_p 0, rep_pen 1.0, presence 0.0. Cap the
   reasoning budget per role — never `-1`. Keep temp ≤ 1.0 on MTP files and repetition_penalty
   exactly 1.0 (raising it degrades MTP).
-- **Evidence:** findings 14, 15, and `data/tables/quality-bench.md` T10 (same model, same
+- **Evidence:** findings 14, 15, and `references/tables/quality-bench.md` T10 (same model, same
   harness: 11/12 with a budget, 0/12 with the budget removed — a 32,000-token run that hit the
   length cap and produced nothing reviewable).
 - **Trap:** `reasoning_effort=medium` is a silent mode that injects nothing; only the default
@@ -146,7 +151,7 @@ Run the steps in order. Each step: the rule, the evidence, the trap, how to veri
 - **Rule:** the harness is a tunable. Tool-call parsing tolerance turned 5/16 failures into 0/16
   without touching the model. Keep thinking on for agent roles — thinking-off made Qwen-class
   models skip the tool call entirely. Client context cap = served window.
-- **Evidence:** `data/tables/harness-toolcall.md` T1, T2; findings 16, 17, 28.
+- **Evidence:** `references/tables/harness-toolcall.md` T1, T2; findings 16, 17, 28.
 - **Trap:** single-turn evals can score 24/24 while the same model fails a real multi-turn
   build. Evaluate multi-turn, in two tiers: a quick proxy for iteration, program-verifier tasks
   for promotion.
@@ -190,6 +195,9 @@ One line each, from the data:
   checked before trusting a score.
 - A quant-tier gain shows in output richness, not always in correctness — IQ4 vs IQ3_XXS both
   scored 11/12 on the same task.
+- Engine upgrades can change how much host RAM they pin by default — re-measure RAM headroom
+  after every upgrade, because a memory-pinning default can take the box to the wall with no
+  change in VRAM at all.
 
 ## Engine notes (llama.cpp, build-specific)
 
@@ -204,7 +212,7 @@ the user's version before recommending one.
 ## 5. What this skill does not know
 
 - **Hardware:** every number is from one 24 GB card class with 31 GB RAM. Never extrapolate a
-  figure to another card or RAM class. Hand the user the bench (`skill/bench/`) and read the
+  figure to another card or RAM class. Hand the user the bench (`bench/`) and read the
   result on their box.
 - **Multi-user / concurrent serving:** all measurements are single-request, one model resident.
   Parallel slots, batching, and cache contention are unmeasured here.
@@ -212,13 +220,13 @@ the user's version before recommending one.
   (Strata, NInfer) get method and traps only, not numbers. What transfers: the fit arithmetic,
   the quality-held-constant method, the recall-at-depth check, the harness traps, the pin-your-
   version rule. What does not: any t/s, GiB, or acceptance figure measured under a different
-  engine. The Strata and NInfer numbers in `data/tables/` are engine-specific and marked as such.
+  engine. The Strata and NInfer numbers in `references/tables/` are engine-specific and marked as such.
 - **Long-horizon quality:** perplexity and planted-bug review are proxies; nothing here measures
   week-long agent behaviour.
 - **Local until tested:** this is v0.1, unreviewed outside the lab that produced it.
 
 ## Bench
 
-Run `skill/bench/quick_bench.md` on the user's hardware before quoting any number as theirs.
+Run `bench/quick_bench.md` on the user's hardware before quoting any number as theirs.
 It measures: memory accounting, prefill and decode at depth, recall at depth, and a small
 quality probe with repeats.

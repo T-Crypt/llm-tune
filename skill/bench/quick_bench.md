@@ -22,7 +22,7 @@ grep -Ei "KV buffer size|compute buffer size|model size|memory" load.log
 
 Record: model file size, KV buffer size, compute buffer size, mmproj, draft-head size if
 speculative decoding is on. These are the numbers the fit arithmetic should use. The
-2.85 GiB "everything else" in `data/tables/kv-cache.md` is an estimate from one run; this
+2.85 GiB "everything else" in `references/tables/kv-cache.md` is an estimate from one run; this
 log is what turns it into a measurement.
 
 ## 2. Peak VRAM and host RAM during a run
@@ -50,42 +50,14 @@ shape (falling with depth) is the transferable part, the values are not.
 
 ## 4. Needle at depth — recall, not just window
 
-```python
-# needle.py - generic version, untested here. Three facts planted at 10/50/90% depth.
-import json, time, urllib.request
-
-SERVER = "http://127.0.0.1:8080/v1/chat/completions"
-MODEL  = "local"
-FACTS  = {"a": "port 9443", "b": "quota 18 TiB", "c": "build 751866"}
-SIZES  = [6000, 30000, 60000]   # haystack lines; roughly the lab's 60k/120k/200k char prompts
-
-def haystack(n_lines, plant_at, facts):
-    lines = [f"{i:06d} INFO worker thread {i%7} processed batch {i} in {i%97} ms"
-            for i in range(n_lines)]
-    for k, idx in plant_at.items():
-        lines[idx] = f"{idx:06d} NOTE {k}: {facts[k]}"
-    return "\n".join(lines)
-
-for size in SIZES:
-    plant = {"a": int(size * 0.10), "b": int(size * 0.50), "c": int(size * 0.90)}
-    text = haystack(size, plant, FACTS)
-    body = {"model": MODEL,
-            "messages": [{"role": "user", "content": text + "\n\nReport the three NOTE values exactly."}],
-            "max_tokens": 200, "temperature": 0.0}
-    t0 = time.time()
-    r = json.loads(urllib.request.urlopen(
-        urllib.request.Request(SERVER, json.dumps(body).encode(),
-                               {"Content-Type": "application/json"})).read())
-    secs = time.time() - t0
-    ans = r["choices"][0]["message"]["content"]
-    usage = r.get("usage", {})
-    pt = usage.get("prompt_tokens", 0)
-    found = sum(1 for k in FACTS if FACTS[k] in ans)
-    print(f"size {size} prompt_tokens {pt} prefill_tps {pt/max(secs,1):.0f} "
-          f"found {found}/3 finish {r['choices'][0].get('finish_reason')} {secs:.1f}s")
+```bash
+python3 needle.py --url http://127.0.0.1:8080/v1/chat/completions --model local \
+  --depths 0.10,0.50,0.90 --lines 6000 --fact "build 751866"
 ```
 
-Read: `found 3/3` at every depth, or the window is not usable. A 400 at a depth means the
+(needle.py is untested here — it has not been run in this repo.)
+
+Read: `recall: yes` at every depth, or the window is not usable. An error at a depth means the
 prompt exceeded the served window — that is a harness bug, not a model failure. Run the same
 depths twice; recall is stable but scores are not.
 
@@ -96,14 +68,17 @@ precedence, path join, timezone compare, unclosed resource, etc.), ask the model
 with a tool call, and score found/12. Run it five times per arm.
 
 ```bash
-for i in 1 2 3 4 5; do
-  curl -s http://127.0.0.1:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{
-    "model": "local",
-    "messages": [{"role":"user","content":"Review /tmp/planted.py for bugs. List each as name: line."}],
-    "max_tokens": 2000, "temperature": 0.0
-  }' | tee "run-$i.json"
-done
+python3 quality_probe.py --url http://127.0.0.1:8080/v1/chat/completions --model local --runs 5
 ```
+
+(quality_probe.py is untested here — it has not been run in this repo. Its graders check the
+answer text; the planted-bug review below is the stronger form when you can score against a
+known defect list.)
+
+The lab form of the same idea: plant 12 known defects in a small file (mutable default,
+swallowed exception, wrong operator precedence, path join, timezone compare, unclosed
+resource), ask the model to review it with a tool call, and score found/12 — five runs per
+arm, so the noise is visible.
 
 Read: the spread, not the best run. ±1–2 bugs on a 12-bug test is normal noise; a single run
 is not a result. Compare arms only with alternating runs (A, B, A, B), same prompt, one change.
@@ -118,7 +93,7 @@ them answer in prose and skip the call entirely.
 
 ## 7. What counts as evidence
 
-- A number from the user's own run, not from `data/tables/`.
+- A number from the user's own run, not from `references/tables/`.
 - A speed claim needs a quality metric held constant in the same run.
 - Three repeats minimum; alternating arms for A/B.
 - One model on the GPU at a time, nothing else holding VRAM.
