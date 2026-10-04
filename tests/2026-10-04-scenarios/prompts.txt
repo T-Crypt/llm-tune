@@ -1,0 +1,3 @@
+I have an RTX 3060 12 GB and 32 GB of RAM on Linux with llama.cpp. I want to run a Qwen 27B dense model as a coding agent with tool calls. What settings should I use?
+My 4090 runs a Q4_K_XL 27B in llama.cpp. It loads fine at 131k context but crashes partway through long requests. What's going on and what should I change?
+I'm on a MacBook Pro M3 with 24 GB unified memory. I want to run Qwen3-Coder-30B-A3B with MLX for coding. Will it fit and what should I set?
