@@ -150,7 +150,11 @@ Run the steps in order. Each step: the rule, the evidence, the trap, how to veri
 - **Rule, in this order:**
   1. Read **this model's own card**: its recommended sampling, whether it has a thinking mode
      at all, and whether thinking is a toggle. Never reuse another model's numbers — house-style
-     defaults are not a spec.
+     defaults are not a spec. If you cannot read the card in this session (no web access), say so
+     and give the user the lookup (the model's Hugging Face page, "Best Practices" / sampling
+     section). Never state what a card recommends from memory or from the example below: in
+     scenario test 1 the example values were wrongly presented as Qwen3-Coder's (its card says
+     temperature 0.7, top_p 0.8, top_k 20, repetition_penalty 1.05).
   2. The values below are one hybrid thinking model's vendor spec (the evidence base). Example
      only, not a default for any other model: temp 1.0, top_p 0.95, top_k 20, min_p 0,
      rep_pen 1.0, presence 0.0.
