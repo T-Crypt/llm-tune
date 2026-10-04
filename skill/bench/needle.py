@@ -59,7 +59,7 @@ def main():
     p.add_argument("--model", default="local")
     p.add_argument("--depths", default="0.10,0.50,0.90", help="comma-separated fractions")
     p.add_argument("--lines", type=int, default=6000, help="haystack lines per prompt")
-    p.add_argument("--fact", default="build 751866", help="the planted value")
+    p.add_argument("--fact", default="ZX-751866", help="the planted value")
     p.add_argument("--max-tokens", type=int, default=4096)
     p.add_argument("--temperature", type=float, default=0.0)
     p.add_argument("--timeout", type=int, default=300)
