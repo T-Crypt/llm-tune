@@ -2,10 +2,11 @@
   <img src="assets/banner.png" alt="llm-tune: quality-aware tuning for local llms. A stacked bar of what a 24 GiB card holds at 131k context: model file, KV cache, compute buffers, mmproj, MTP draft, headroom." width="100%">
 </div>
 
-A Claude skill that tunes local LLM settings: quant, context window, KV cache
+An agent skill that tunes local LLM settings: quant, context window, KV cache
 type, offload, speculative decoding (MTP), sampling, reasoning budget, and
 harness settings. Every recommendation names the measurement behind it, and the
-skill ships a bench so you can check each number on your own hardware.
+skill ships a bench so you can check each number on your own hardware. Any
+agent that loads skills or reads rules files can run it.
 
 **Status: v0.2 (2026-10-08).** Scenario-tested and published. The bench scripts
 were fixed from a live run and have not been re-run since the fixes; commands
@@ -90,7 +91,8 @@ Cline, Kiro, Qoder, Gemini CLI, Hermes Agent, Devin CLI. Skill-system agents
 get the structured procedure; rules-file agents get the same content as a
 rules file.
 
-To remove from Claude Code: delete `~/.claude/skills/llm-tune`.
+To remove it, delete the `llm-tune` folder from your agent's skill directory
+(on Claude Code: `~/.claude/skills/llm-tune`).
 
 ## The bench
 
