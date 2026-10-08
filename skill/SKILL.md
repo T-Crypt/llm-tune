@@ -24,10 +24,10 @@ Every tier table is sourced and verified externally; none are measurements from 
 Detail lives in `references/tables/` and `references/findings.md`; cite them when you make a
 claim. `references/CORRECTIONS.md` wins over `references/findings.md` where they differ.
 New reference files: `references/hardware-tiers.md`, `references/engine-backends.md`,
-`references/harnesses.md`, `references/debloat.md`, `references/safety.md`,
-`references/user-journeys.md`, `references/model-management.md`, `references/vllm-local.md`,
-`references/mlx-mac-tuning.md`, `references/intel-amd-unified.md`,
-`references/llama-fit-broadening.md`.
+  `references/harnesses.md`, `references/debloat.md`, `references/safety.md`,
+  `references/user-journeys.md`, `references/model-management.md`, `references/vllm-local.md`,
+  `references/mlx-mac-tuning.md`, `references/intel-amd-unified.md`,
+  `references/llama-fit-broadening.md`, `references/local-orchestration.md`.
 
 **Claim discipline:** every number or behaviour you state must come from a table, a finding, or
 a cited source. Anything you infer must be said as inferred — "I expect", "derived, not
@@ -217,6 +217,12 @@ Run the steps in order. Each step: the rule, the evidence, the trap, how to veri
   and model/file deletion safety.
 - **Verify:** `bench/mlx_quant_search.py` for the estimate, then a real load. Sources and detail:
   `references/mlx-mac-tuning.md`.
+- **Optional — LOCAL.md (local model command frontier):** `references/local-orchestration.md`
+  documents an additional setup pattern, not a required step. A `LOCAL.md` (~4096 tokens) serves
+  as the local model's command frontier while `AGENTS.md`/`CLAUDE.md` remain the global frontier.
+  Uses a chunk function to trim any-size `AGENTS.md` down to local-model size, with a trim log so
+  nothing is lost. The tested loopback router at `ai.ttindall.com/recipes/claude-code-local-subagents/`
+  is the harness mechanism that routes local model requests to `LOCAL.md`.
 
 ## 3. Verification
 

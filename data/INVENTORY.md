@@ -370,3 +370,28 @@ no weight downloads, no GPU jobs. Each entry below maps to which `skill/referenc
 - **`../research/qwen-official.md` — Qwen model vendor, architecture timeline:** Next dense Qwen prediction
   (~27-32B, GDN hybrid, MTP, 256K+, vision). Qwen3.8-Flash-Next custom license (qwen-community-1.0). Feeds
   `references/engine-research-sm89.md` (Qwen context) and model management guidance. TAG: DATA.
+
+### Local model orchestration recipes (ai.ttindall.com, tested)
+
+These are tested recipes from `https://ai.ttindall.com/recipes/` that implement the LOCAL.md pattern
+described in `references/local-orchestration.md`. Each is a public, tested recipe with placeholders
+for the operator's own paths and ports. All tested 2026-09-26 on a 1x RTX 4090 24 GB.
+
+- **Claude Code on a local model through llama-swap:** Run Claude Code's agent loop against a model
+  on your own GPU. llama.cpp `llama-server` does inference; llama-swap loads models on demand. Sets
+  up the basic local-model-in-harness path. Cites in `references/local-orchestration.md`. URL:
+  https://ai.ttindall.com/recipes/claude-code-llama-swap/ — TAG: DATA (setup pattern).
+- **Local models as Claude Code subagents through a loopback router:** A loopback proxy between Claude
+  Code and the API routes local role names to llama-swap while passing everything else to Anthropic.
+  This is the harness mechanism that directs local model requests to LOCAL.md and cloud model requests
+  to AGENTS.md/CLAUDE.md. Cites in `references/local-orchestration.md`. URL:
+  https://ai.ttindall.com/recipes/claude-code-local-subagents/ — TAG: DATA (routing mechanism).
+- **Stable role names for local models with llama-swap:** Maps stable role aliases (agent, coder, review,
+  fast, thinker) to underlying model files with per-OS path macros and commit-first apply workflow.
+  Determines which LOCAL.md guidance applies to each local role. Cites in `references/local-orchestration.md`.
+  URL: https://ai.ttindall.com/recipes/llama-swap-roles/ — TAG: DATA (role configuration).
+- **Cap thinking per role, not per model:** Same model file, different thinking budgets per role
+  (agent 4096, coder 768, thinker 16384). Directly relevant to LOCAL.md sizing — reasoning budget per
+  role is part of what LOCAL.md must specify for local model operation. Cites in
+  `references/local-orchestration.md`. URL: https://ai.ttindall.com/recipes/reasoning-budget-per-role/
+  — TAG: DATA (role configuration).
