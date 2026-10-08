@@ -243,14 +243,14 @@ and the source's own publication date where known.
 | Tag | DATA |
 | Cited in | `data/INVENTORY.md` |
 
-### 20. RTX 5090 VRAM Requirements 2026 (VRLA Tech)
+### 20. RTX 5090 Specs and VRAM Requirements (ModelFit)
 | Field | Value |
 |---|---|
-| Source | VRLA Tech |
-| URL | https://vrlatech.com/llama-vram-requirements-2026/ |
-| Date | 2026 (exact date not stated) |
-| Status | Verified live 2026-10-08 |
-| What was extracted | RTX 5090 tier fits, GPU benchmark data, VRAM requirements across cards |
+| Source | ModelFit |
+| URL | https://modelfit.io/gpu/rtx-5090/ |
+| Date | 2026-07-27 |
+| Status | Verified live 2026-10-08 (replaces VRLA Tech source, returned 404) |
+| What was extracted | RTX 5090 tier fits, GPU benchmark data, VRAM requirements across cards. "32GB GDDR7 VRAM with 1,792 GB/s bandwidth, the most of any consumer GPU." |
 | Used in | `references/hardware-tiers.md` (Tier 3 RTX 5090, Tier 4 RTX 6000) |
 | Tag | DATA |
 | Cited in | `data/INVENTORY.md` |

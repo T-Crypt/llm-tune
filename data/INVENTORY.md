@@ -290,7 +290,7 @@ These are web sources verified live (2026-10-08) and cited in the new reference 
 - **MLX-LM 2026 (PromptQuorum):** Apple's LLM toolkit, unified memory explanation. Cited in `references/hardware-tiers.md`. URL: https://www.promptquorum.com/power-local-llm/mlx-lm-explained — TAG: DATA.
 - **M6 Mac mini local AI (ModelFit, 2026):** 16/24/32 GB tiers, bandwidth, what fits. Cited in `references/hardware-tiers.md`, `references/mlx-mac-tuning.md`. URL: https://modelfit.io/blog/m6-mac-mini-local-llm/ — TAG: DATA.
 - **Mac mini 2026 Reddit (r/macmini):** 24→64 GB upgrade fits 6-bit at small context. Cited in `references/hardware-tiers.md`. URL: https://www.reddit.com/r/macmini/comments/1wo9de8/ — TAG: DATA.
-- **RTX 5090 specs and VRAM requirements (VRLA Tech, 2026):** 32 GB GDDR7, 1792 GB/s, tier fits. Cited in `references/hardware-tiers.md`. URL: https://vrlatech.com/llama-vram-requirements-2026/ — TAG: DATA.
+- **RTX 5090 specs and VRAM requirements (ModelFit, 2026):** 32 GB GDDR7, 1792 GB/s, tier fits. "The RTX 5090 has 32GB GDDR7 VRAM with 1,792 GB/s bandwidth, the most of any consumer GPU. About 31GB is usable for models." Verified live 2026-10-08; replaces VRLA Tech source which returned 404. Cited in `references/hardware-tiers.md`. URL: https://modelfit.io/gpu/rtx-5090/ — TAG: DATA.
 - **RTX 5090 multi-GPU strategies (Reddit r/LocalLLaMA, 2026):** 32 GB VRAM usage, dual 5090 setups. Cited in `references/hardware-tiers.md`. URL: https://www.reddit.com/r/LocalLLaMA/comments/1wbj1tk/ — TAG: DATA.
 
 ### Harness debloat
