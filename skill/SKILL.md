@@ -15,8 +15,19 @@ expert-cache engines (Strata, NInfer). **Do not transfer a number to another car
 class.** Transfer the method and the traps, and run the bench in `bench/` on the
 user's own box before quoting any figure as theirs.
 
+**Hardware coverage:** `references/hardware-tiers.md` covers every class — 8 GB Intel Arc,
+16–32 GB consumer, 24 GB sweet spot, 32–48 GB high-end, 64–128 GB unified (Mac Studio,
+Strix Halo), 192–256 GB unified (Gorgon Halo, Mac Studio Ultra), and cluster/DGX-tier.
+Every tier table is sourced and verified externally; none are measurements from this repo.
+**Verify on your own box.**
+
 Detail lives in `references/tables/` and `references/findings.md`; cite them when you make a
 claim. `references/CORRECTIONS.md` wins over `references/findings.md` where they differ.
+New reference files: `references/hardware-tiers.md`, `references/engine-backends.md`,
+`references/harnesses.md`, `references/debloat.md`, `references/safety.md`,
+`references/user-journeys.md`, `references/model-management.md`, `references/vllm-local.md`,
+`references/mlx-mac-tuning.md`, `references/intel-amd-unified.md`,
+`references/llama-fit-broadening.md`.
 
 **Claim discipline:** every number or behaviour you state must come from a table, a finding, or
 a cited source. Anything you infer must be said as inferred — "I expect", "derived, not
@@ -180,32 +191,30 @@ Run the steps in order. Each step: the rule, the evidence, the trap, how to veri
   (Instruct) variant has nothing to turn on: check its template for whether thinking is a toggle
   before recommending it, and judge it on tool-call reliability instead. Client context cap =
   served window.
-- **Evidence:** `references/tables/harness-toolcall.md` T1, T2; findings 16, 17, 28.
+- **Evidence:** `references/tables/harness-toolcall.md` T1, T2; findings 16, 17, 28;
+  `references/harnesses.md`, `references/debloat.md`.
 - **Trap:** single-turn evals can score 24/24 while the same model fails a real multi-turn
   build. Evaluate multi-turn, in two tiers: a quick proxy for iteration, program-verifier tasks
   for promotion.
 - **Verify:** run the same task set with the parser change only, model and flags held constant.
 
-### Step 9 — Apple Silicon (MLX): documented, not measured here
+### Step 9 — Apple Silicon (MLX), Intel Arc, AMD unified memory, and other non-NVIDIA hardware
 
-- **Rule:** the budget is the wired limit, not total RAM. `iogpu.wired_limit_mb` is the system
-  limit; `0` (default) means macOS derives it from installed RAM — community guides report about
-  2/3 of RAM at 36 GB or less and about 3/4 above, and sources disagree on large machines. Read
-  the machine's own value: `sysctl iogpu.wired_limit_mb`, and
-  `python -c "import mlx.core as mx; print(mx.metal.device_info())"` for
-  `max_recommended_working_set_size` and `memory_size`.
-- **Raise it in steps:** `sudo sysctl iogpu.wired_limit_mb=<MB>`, kept strictly under total RAM
-  (practitioners stop around 85–90%), with other apps closed. It resets on reboot.
-- **Worked example (community-reported, not measured here):** a 24 GB Mac defaults to about
-  16 GB for the GPU; raising it to 20 GB is a common, workable setting.
-  `mlx-community/Qwen3-Coder-30B-A3B-Instruct-4bit` is 16.0 GiB of weights — it does not fit the
-  default ~16 GB limit, and fits at 20 GB with about 4 GB left for KV and overhead, which is tight.
-  The 20 GB is the general setting for a 24 GB Mac, not a figure reported for that model.
-- **Trap:** weights are not the working set. KV and engine overhead compete for the same pool,
-  so a quant that fits on paper can fail on load. Confirm with a real load plus the bench, never
-  by arithmetic alone.
+- **MLX / unified memory (all Mac tiers):** `references/mlx-mac-tuning.md` covers Mac mini M6
+  through Mac Studio M5 Ultra 512 GB — the wired limit, the 75% rule, per-tier fit estimates,
+  and MLX-specific tuning. No Apple Silicon run exists in this repo; all data is sourced and
+  must be verified on the user's machine.
+- **Intel Arc / AMD unified memory:** `references/intel-amd-unified.md` covers SYCL (Intel),
+  HIP/ROCm (AMD Strix/Gorgon Halo), and Vulkan backends. llama-fit-params works on all of them
+  (see `references/llama-fit-broadening.md`).
+- **Engine-specific fit:** `references/engine-backends.md` — every backend's fit arithmetic,
+  commands, and traps (CUDA, SYCL, Vulkan, HIP/ROCm, MLX/Metal, Ollama, vLLM).
+- **User journeys:** `references/user-journeys.md` — 5 entry-state workflows from "I have no
+  models" to "I'm pushing the frontier."
+- **Safety:** `references/safety.md` — validate-with-operator protocol for irreversible actions
+  and model/file deletion safety.
 - **Verify:** `bench/mlx_quant_search.py` for the estimate, then a real load. Sources and detail:
-  `references/apple-mlx.md`.
+  `references/mlx-mac-tuning.md`.
 
 ## 3. Verification
 
@@ -268,24 +277,34 @@ draft-mtp` (with `--spec-draft-n-max`), `--jinja` for template-driven reasoning 
 canonical flag set: names and defaults change between builds, so confirm against `--help` on
 the user's version before recommending one.
 
+Other engines (SYCL, Vulkan, HIP/ROCm, MLX/Metal, Ollama, vLLM) have different flag sets and
+memory accounting. See `references/engine-backends.md` for each backend's commands and traps.
+The fit arithmetic (model + KV + compute + context + overhead) is universal; only the memory
+accounting and flag names differ.
+
 ## 5. What this skill does not know
 
-- **Hardware:** every number is from one 24 GB card class with 31 GB RAM. Never extrapolate a
-  figure to another card or RAM class. Hand the user the bench (`bench/`) and read the
-  result on their box. **Contributions from other hardware classes are actively sought**
-  — `CONTRIBUTING.md` has the submission template and quality standards. The most valuable
-  data: fit/crash data from cards we don't have, recall-at-depth from other hardware,
-  Apple Silicon measurements, and multi-user serving behaviour.
+- **Hardware:** every number in `references/tables/` is from one 24 GB card class with 31 GB RAM.
+  Never extrapolate a figure to another card or RAM class. **However, `references/hardware-tiers.md`
+  now covers every hardware class** — 8 GB Intel Arc through 512 GB Mac Studio and DGX clusters —
+  with sourced (but externally verified) data per tier. Verify on the user's box before quoting.
+  **Contributions from other hardware classes are actively sought** — `CONTRIBUTING.md` has the
+  submission template. Most valuable: fit/crash data from cards we don't have, recall-at-depth
+  from other hardware, multi-user serving behaviour.
 - **Multi-user / concurrent serving:** all measurements are single-request, one model resident.
-  Parallel slots, batching, and cache contention are unmeasured here.
+  Parallel slots, batching, and cache contention are unmeasured here. See `references/vllm-local.md`
+  for a measurement methodology for 2–3 endpoint local serving.
 - **Other engines — evidence is thin:** Ollama, LM Studio, vLLM, and expert-offload engines
   (Strata, NInfer) get method and traps only, not numbers. What transfers: the fit arithmetic,
   the quality-held-constant method, the recall-at-depth check, the harness traps, the pin-your-
   version rule. What does not: any t/s, GiB, or acceptance figure measured under a different
-  engine. The Strata and NInfer numbers in `references/tables/` are engine-specific and marked as such.
-- **Apple Silicon / MLX is documented, not measured here.** The wired-limit facts, the default
-  fractions, and the 24 GB worked example come from the cited sources in `references/apple-mlx.md`;
-  nothing in this repo has run on an Apple Silicon machine.
+  engine. See `references/engine-backends.md` for per-engine details. The Strata and NInfer
+  numbers in `references/tables/` are engine-specific and marked as such.
+- **Apple Silicon / MLX:** covered in `references/mlx-mac-tuning.md` — documented from cited
+  sources, not measured here. The wired-limit facts, the default fractions, and per-tier fit
+  estimates come from the cited sources; nothing in this repo has run on an Apple Silicon machine.
+- **Intel Arc / AMD unified memory:** covered in `references/intel-amd-unified.md` — SYCL (Intel),
+  HIP/ROCm (AMD Strix/Gorgon Halo), Vulkan. All externally sourced, none measured here.
 - **Long-horizon quality:** perplexity and planted-bug review are proxies; nothing here measures
   week-long agent behaviour.
 - **Local until tested:** this is v0.2, reviewed internally (see `CONTRIBUTING.md` for how to verify on your hardware).

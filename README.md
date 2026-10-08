@@ -31,6 +31,17 @@ Measurement Report template, or a PR tagged `data-submission`.
 | `skill/bench/` | The user-side bench — commands plus three stdlib scripts (needle, quality probe, MLX fit estimate) |
 | `skill/references/evidence.md` | Index from each decision step to the tables and findings behind it |
 | `skill/references/apple-mlx.md` | Apple Silicon / MLX — documented from cited sources, not measured here |
+| `skill/references/hardware-tiers.md` | Every hardware class — 8 GB Intel Arc through 512 GB Mac Studio and DGX clusters (sourced, externally verified) |
+| `skill/references/engine-backends.md` | Per-backend fit arithmetic, commands, and traps (CUDA, SYCL, Vulkan, HIP/ROCm, MLX/Metal, Ollama, vLLM) |
+| `skill/references/harnesses.md` | Harness-specific tuning — Pi, OMP, Claude-local, OpenCode, Claude Code (Infralovers 2026 benchmark) |
+| `skill/references/debloat.md` | Harness debloat, MCP compression (Atlassian: 17,600→500 tokens), per-tier tool limits |
+| `skill/references/safety.md` | Validate-with-operator protocol, model/file deletion safety |
+| `skill/references/llama-fit-broadening.md` | llama-fit-params across all backends (CUDA, SYCL, Vulkan, HIP/ROCm, Metal), broadening beyond NVIDIA |
+| `skill/references/user-journeys.md` | 5 entry-state workflows from "I have no models" to "pushing the frontier" |
+| `skill/references/model-management.md` | HF CLI download, model inventory template, deletion safety |
+| `skill/references/vllm-local.md` | vLLM tuning for 2–3 endpoint local serving, multi-model, cluster |
+| `skill/references/mlx-mac-tuning.md` | MLX + unified memory, all Mac tiers (M6 through M5 Ultra 512 GB), wired limit, 75% rule |
+| `skill/references/intel-amd-unified.md` | Intel Arc SYCL/Vulkan, AMD Strix/Gorgon Halo HIP/ROCm, BIOS allocation, bandwidth reality |
 | `data/INVENTORY.md` | Catalogue of the source evidence: what was measured, how, headline numbers, usefulness tag |
 | `skill/references/findings.md` | The most generalisable lessons pulled from the inventory |
 | `skill/references/tables/` | Measurements extracted from the DATA-tagged sources, one table per measurement set |
@@ -52,3 +63,7 @@ Rules in the skill that are method or judgement, not measurements:
 - The bench scripts and the llama-bench flag list are unrun here — marked "(untested here)".
 - The idea that a partial CPU offload "costs more t/s than the quant gains back" was the
   source's expectation; the measured part is only the direction (more offload, less speed).
+- **Hardware tier data** in `references/hardware-tiers.md` and per-engine advice in
+  `references/engine-backends.md` are sourced from external verification (web sources, community
+  reports, official docs) but **not measured in this repo**. Every tier number must be verified
+  on the user's own box before quoting.

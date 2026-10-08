@@ -56,3 +56,11 @@ wire down part of it.
 `mlx_lm.server` exposes an OpenAI-compatible endpoint, so `bench/needle.py` and
 `bench/quality_probe.py` work against it. Its flags have not been checked here — confirm with
 `--help` on the user's install.
+
+## Broader Mac coverage
+
+For all Mac tiers (Mac mini M6 through Mac Studio M5 Ultra 512 GB), the wired limit, 75% rule,
+per-tier model fit, bandwidth ladder, and upgrade decisions: see `references/mlx-mac-tuning.md`.
+
+For Intel Arc and AMD Strix/Gorgon Halo (unified memory, SYCL/Vulkan/HIP/ROCm backends): see
+`references/intel-amd-unified.md` and `references/llama-fit-broadening.md`.

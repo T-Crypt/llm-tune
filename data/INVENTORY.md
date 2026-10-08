@@ -267,3 +267,60 @@ Changes (model-tuning-relevant headings):
 - 2026-09-25 late night — round 5 clean re-run, losing quants deleted; prefill/decode visibility for agent traffic. DATA.
 - 2026-09-23 evening — `-ub 1024` applied to 16 MoE entries (+31–34% prefill); sysmem fallback off. FINDING.
 - 2026-09-22 — image-plane (ComfyUI) history on the same card. LOCAL-ONLY.
+
+---
+
+## External verification sources (cited in `references/`)
+
+These are web sources verified live (2026-10-08) and cited in the new reference files. None are measurements from this repo; all are externally sourced and must be verified on the user's own hardware.
+
+### Hardware tiers
+
+- **Infralovers — 4 harnesses benchmark (2026-07-14):** same model across Pi, OpenCode, Claude Code, Copilot. "Friction and autonomy don't move together." Cited in `references/harnesses.md`. URL: https://www.infralovers.com/blog/2026-07-14-local-model-ai-coding-tools-benchmark/ — TAG: DATA (harness comparison data).
+- **Intel Arc B580 best for local LLMs (PromptQuorum, 2026):** 12 GB VRAM, 7–14B Q4 quant fits. Cited in `references/hardware-tiers.md`, `references/intel-amd-unified.md`. URL: https://www.promptquorum.com/prompt-bites/best-intel-arc-gpu-local-llm — TAG: DATA.
+- **Intel Arc SYCL guide (Intel developer, 2026):** Run LLMs on Intel GPUs using llama.cpp. Cited in `references/engine-backends.md`, `references/intel-amd-unified.md`. URL: https://www.intel.com/content/www/us/en/developer/articles/technical/run-llms-on-gpus-using-llama-cpp.html — TAG: DATA (backend info).
+- **Intel Arc Pro B70 discussion (GitHub, 2026):** SYCL performance on B70. Cited in `references/intel-amd-unified.md`. URL: https://github.com/ggml-org/llama.cpp/discussions/27593 — TAG: DATA.
+- **AMD Strix Halo guide (LocalAimaster, May 2026):** 128 GB unified, 96 GB GPU alloc, 256 GB/s, 70B Q4/Q8 fits, ROCm setup, BIOS allocation. Cited in `references/hardware-tiers.md`, `references/intel-amd-unified.md`, `references/llama-fit-broadening.md`. URL: https://localaimaster.com/blog/strix-halo-ai-max-395-guide — TAG: DATA.
+- **Ryzen AI Max+ 395 specs (AMD Build 2026):** 128 GB unified LPDDR5X-8533, 131 TOPS. Cited in `references/hardware-tiers.md`. URL: https://www.amd.com/en/developer/resources/technical-articles/2026/amd-at-microsoft-build-2026.html — TAG: DATA.
+- **Ryzen AI Max PRO 400 / Gorgon Halo (Tech Insider, Sep 2026):** 192 GB unified, 300B INT4, 160 GB VRAM alloc, 273 GB/s. Cited in `references/hardware-tiers.md`, `references/intel-amd-unified.md`. URL: https://tech-insider.org/amd-ryzen-ai-max-pro-400-192gb-unified-memory-2026/ — TAG: DATA.
+- **192GB Framework Desktop (Medium, 2026):** 192GB mini PC GPU comparison. Cited in `references/intel-amd-unified.md`. URL: https://medium.com/@mayhemcode/the-new-192gb-mini-pcs-cost-nearly-twice-as-much-their-gpu-barely-changed-aab34807426a — TAG: DATA.
+- **Mac local LLM buying guide (LLM Configurator, Sep 2026):** Mac mini M6 through M5 Ultra, 75% rule, bandwidth ladder, per-tier model fit. Cited in `references/hardware-tiers.md`, `references/mlx-mac-tuning.md`. URL: https://llmconfigurator.com/en/guides/mac-local-ai-buying-guide — TAG: DATA.
+- **Mac Studio LLM guide (ModelFit, 2026):** M2 Ultra through M5 Ultra, model fit per RAM tier. Cited in `references/hardware-tiers.md`, `references/mlx-mac-tuning.md`. URL: https://modelfit.io/mac-studio/m2/ — TAG: DATA.
+- **Apple Silicon LLM guide (canitrun.dev, 2026):** M1 to M6 complete, Ollama MLX default for >32 GB. Cited in `references/hardware-tiers.md`, `references/mlx-mac-tuning.md`. URL: https://canitrun.dev/guides/apple-silicon-llm-guide/ — TAG: DATA.
+- **MLX-LM 2026 (PromptQuorum):** Apple's LLM toolkit, unified memory explanation. Cited in `references/hardware-tiers.md`. URL: https://www.promptquorum.com/power-local-llm/mlx-lm-explained — TAG: DATA.
+- **M6 Mac mini local AI (ModelFit, 2026):** 16/24/32 GB tiers, bandwidth, what fits. Cited in `references/hardware-tiers.md`, `references/mlx-mac-tuning.md`. URL: https://modelfit.io/blog/m6-mac-mini-local-llm/ — TAG: DATA.
+- **Mac mini 2026 Reddit (r/macmini):** 24→64 GB upgrade fits 6-bit at small context. Cited in `references/hardware-tiers.md`. URL: https://www.reddit.com/r/macmini/comments/1wo9de8/ — TAG: DATA.
+- **RTX 5090 specs and VRAM requirements (VRLA Tech, 2026):** 32 GB GDDR7, 1792 GB/s, tier fits. Cited in `references/hardware-tiers.md`. URL: https://vrlatech.com/llama-vram-requirements-2026/ — TAG: DATA.
+- **RTX 5090 multi-GPU strategies (Reddit r/LocalLLaMA, 2026):** 32 GB VRAM usage, dual 5090 setups. Cited in `references/hardware-tiers.md`. URL: https://www.reddit.com/r/LocalLLaMA/comments/1wbj1tk/ — TAG: DATA.
+
+### Harness debloat
+
+- **Atlassian mcp-compression (2026-03-29):** 94-tool GitHub MCP server compressed 17,600 → 500 tokens (97% reduction). Cited in `references/debloat.md`. URL: https://www.atlassian.com/blog/development/mcp-compression-preventing-tool-bloat-in-ai-agents — TAG: DATA.
+- **Dev.to: MCP bloat hits local models harder (2026):** Cloud models absorb bloat; local models can't. Cited in `references/debloat.md`. URL: https://dev.to/shenao_yu_e15c14815264a44/mcp-tool-bloat-hits-local-models-harder-a-constraint-worth-talking-about-oon — TAG: DATA.
+
+### Model management
+
+- **HuggingFace Hub CLI docs:** pip install huggingface_hub, hf download, hf api. Cited in `references/model-management.md`. URL: https://huggingface.co/docs/huggingface_hub/en/guides/cli — TAG: DATA.
+- **Unsloth Desktop docs:** model hub, connect harnesses to local models. Cited in `references/model-management.md`. URL: https://unsloth.ai/docs/desktop — TAG: DATA.
+
+### vLLM
+
+- **vLLM serve docs:** https://docs.vllm.ai/en/stable/cli/serve/ — TAG: DATA (command reference).
+- **vLLM on DGX Spark (2026-06-01):** multi-node architecture, tensor parallel, sparkrun. Cited in `references/vllm-local.md`, `references/hardware-tiers.md`. URL: https://vllm.ai/blog/2026-06-01-vllm-dgx-spark — TAG: DATA.
+- **NVIDIA DGX Spark vLLM:** https://build.nvidia.com/spark/vllm/multi-node — TAG: DATA.
+- **MindStudio cluster guide:** RDMA clustering, tensor parallel. Cited in `references/vllm-local.md`. URL: https://www.mindstudio.ai/blog/how-to-cluster-dgx-spark-vllm — TAG: DATA.
+- **vLLM production deployment (Spheron, 2026):** load balancing, FP8 quantization, multi-GPU. Cited in `references/vllm-local.md`, `references/hardware-tiers.md`. URL: https://www.spheron.network/blog/vllm-production-deployment-2026/ — TAG: DATA.
+- **Multi-model serving (vLLM discussions #239):** multiple models per endpoint. Cited in `references/vllm-local.md`. URL: https://github.com/vllm-project/vllm/discussions/239 — TAG: DATA.
+
+### llama-fit-params broadening
+
+- **llama.cpp fit-params README:** https://github.com/ggml-org/llama.cpp/blob/master/tools/fit-params/README.md — TAG: DATA (tool documentation).
+- **Reddit: llama-fit-params on Intel Arc:** https://www.reddit.com/r/LocalLLaMA/comments/1srvqar/ — TAG: DATA (confirms fit works on non-NVIDIA).
+- **LM Studio bug tracker: llama_params_fit feature request:** https://github.com/lmstudio-ai/lmstudio-bug-tracker/issues/1673 — TAG: DATA.
+- **Local LLM optimization guide (carteakey.dev):** llama-fit-params description. Cited in `references/llama-fit-broadening.md`. URL: https://carteakey.dev/blog/local-inference/local-llm-optimization/ — TAG: DATA.
+- **ROCm + llama.cpp (AMD blog):** https://rocm.blogs.amd.com/ecosystems-and-partners/llama-cpp/README.html — TAG: DATA.
+
+### MLX
+
+- **MLX docs (wired limit):** https://ml-explore.github.io/mlx/build/html/python/_autosummary/mlx.core.set_wired_limit.html — TAG: DATA (API reference).
+- **headroom issue #13:** https://github.com/blaine-hiers/headroom/issues/13 — TAG: DATA (default fractions, 24 GB worked example).
