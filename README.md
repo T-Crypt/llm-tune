@@ -115,6 +115,22 @@ and decode at depth, recall at depth (three planted facts at 10/50/90%), and
 a quality probe with repeats. Run-to-run noise of ±1-2 bugs on a 12-bug test
 is normal; the spread is the data point.
 
+## Compare and contribute: the local-ai-registry
+
+[local-ai-registry](https://github.com/sybil-solutions/local-ai-registry)
+([local.sybilsolutions.ai](https://local.sybilsolutions.ai/)) keeps
+community-tested tunes as recipes per card, each carrying a proof block from
+the run that validated it: it loads, chats, reasons, calls tools, holds its
+context window, and decodes at 15 tok/s or more. This repo's own testing used
+the registry's RTX 4090 baselines, published by 0xSero, as reference points
+while tuning the author's card.
+
+When your llm-tune session ends with numbers you trust, compare them against
+the closest card entry, then feed both directions: a PR to the registry
+publishes your recipe with its proof, and a Measurement Report here (see
+`CONTRIBUTING.md`) grows these tables. That keeps the numbers relevant to the
+community.
+
 ## Scope
 
 Read this before trusting a number.

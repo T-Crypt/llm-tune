@@ -7,6 +7,9 @@
   "settings with receipts"; README framed agent-agnostic.
 - Internal build plans and review notes moved from the repository root to
   `docs/dev/`.
+- Credit and compare-and-contribute section added for the local-ai-registry
+  (sybil-solutions): its RTX 4090 recipes by 0xSero served as baselines during
+  this repo's testing.
 - Repo-wide typographic cleanup: em dashes removed, formulaic phrasing
   rewritten. Meaning unchanged.
 - Added this changelog, a note on the frozen scenario records in `tests/`,
