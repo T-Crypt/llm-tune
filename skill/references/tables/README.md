@@ -1,6 +1,6 @@
 # Measurement tables
 
-Extracted from the DATA-tagged sources catalogued in the project inventory (project material, not part of the installed skill). Numbers copied exactly from the sources — no rounding, no averaging, no gap-filling; "n/a" means not measured. Hardware described generically; sources cited by repo-relative path in the source repo.
+Extracted from the DATA-tagged sources catalogued in `data/INVENTORY.md` (repo material, outside the installed skill). Numbers copied exactly from the sources, no rounding, no averaging, no gap-filling; "n/a" means not measured. Hardware described generically; sources cited by repo-relative path in the source repo.
 
 | File | Tables | Covers |
 |---|---|---|

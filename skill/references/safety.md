@@ -6,7 +6,7 @@ This section covers two safety concerns: (1) the "validate with operator" comman
 
 ## Part 1: Validate with operator
 
-**The rule:** Before any irreversible action — deleting data, rotating credentials, destroying guests, exposing a service, force-pushing, modifying a running system — the skill MUST pause and ask the operator.
+**The rule:** before any irreversible action (deleting data, rotating credentials, destroying guests, exposing a service, force-pushing, modifying a running system), the skill stops and asks the operator.
 
 ### The safety command:
 
@@ -14,11 +14,11 @@ This section covers two safety concerns: (1) the "validate with operator" comman
 
 ### What "validate with operator" means in practice:
 
-1. **State exactly what will be removed or changed** — name the files, models, configs, or systems
-2. **State what will be kept** — what stays untouched
-3. **Confirm this isn't the only instance** — backup? another machine? another deploy?
-4. **Wait for explicit approval** — silence is not consent; proceed only after the operator says go
-5. **After completion** — verify the expected state, report what changed
+1. **State exactly what will be removed or changed**: name the files, models, configs, or systems
+2. **State what will be kept**: what stays untouched
+3. **Confirm this isn't the only instance**: backup? another machine? another deploy?
+4. **Wait for explicit approval**: silence is not consent; proceed only after the operator says go
+5. **After completion**: verify the expected state, report what changed
 
 ### Common irreversible actions that require validation:
 
@@ -28,7 +28,7 @@ This section covers two safety concerns: (1) the "validate with operator" comman
 | Deleting a quant | Quant name, model it belongs to, file size | Is this the only copy? Any references? |
 | Deleting a harness config | Which harness, what settings | Can it be recreated? Is it version controlled? |
 | Rotating a credential | Which service, impact on running systems | Is there a rollout plan? Rolling restart? |
-| Exposing a service | Which service, port, URL | Is this the one public service (jellyfin)? |
+| Exposing a service | Which service, port, URL | Is exposing it in scope at all? Whose call is it? |
 | Force-pushing | Branch, what will be overwritten | Is there a backup branch? |
 | Destroying a guest/VM | VM ID, name, data on disk | Snapshot? Backup? Other guests depend on it? |
 | Restarting a service | Which service, downtime window | Graceful shutdown? Connection drain? |
@@ -51,10 +51,10 @@ When the decision procedure reaches an irreversible step, stop and use the valid
 2. State exactly what will be removed and what will be kept
 3. Confirm this isn't the only instance:
    - Check for backups: `find / -name "MODEL.gguf" 2>/dev/null`
-   - Check Hugging Face cache: `~/.cache/huggingface/hub/` — is it downloaded elsewhere?
+   - Check Hugging Face cache: `~/.cache/huggingface/hub/`, is it downloaded elsewhere?
    - Check if other machines use it (network share, NAS)
 4. Use **interactive deletion** for files: `rm -ri <file>` (prompts per file)
-5. **Never use `rm -rf` for model files** — always confirm each deletion
+5. **Never use `rm -rf` for model files**: always confirm each deletion
 6. After deletion: update the model inventory (see `model-management.md`)
 7. Verify: check that disk space was freed, check that no running server references the deleted file
 
@@ -73,7 +73,7 @@ find / -name "<filename>.gguf" 2>/dev/null | head -5
 # 4. Check Hugging Face cache
 du -sh ~/.cache/huggingface/hub/models--<org>--<model>/
 
-# 5. Interactive deletion (ALWAYS use -ri)
+# 5. Interactive deletion (always use -ri)
 rm -ri ./models/<name>/<file>.gguf
 
 # 6. Verify deletion
@@ -98,17 +98,17 @@ ls -la ~/.cache/huggingface/hub/models--<org>--<model>/snapshots/
 
 ---
 
-## Part 3: What NEVER to do
+## Part 3: What not to do
 
-| NEVER | Why |
+| Action | Why |
 |---|---|
 | `rm -rf` on model files | Too destructive; use `rm -ri` and confirm |
 | Delete the only copy of a model | Check backups and other machines first |
-| Delete while a server is running | Stop the server first; verify it's stopped |
-| Delete HF cache without checking duplicates | Multiple machines may share the cache |
+| Delete while a server is running | Stop the server first; verify it is stopped |
+| Delete an HF cache without checking duplicates | Multiple machines may share the cache |
 | Rotate credentials without validation | May break running services |
-| Expose a new service publicly | Only jellyfin.ttindall.com + apex is public |
-| Touch VM 250 (kali) | OFF LIMITS — never |
+| Expose a new service publicly | Out of scope for a tuning skill; never do it as a side effect |
+| Operate outside the request's scope | Tuning means settings; it does not mean managing the user's infrastructure |
 
 ---
 
@@ -125,6 +125,6 @@ When the 9-step decision procedure reaches an irreversible step, insert the vali
 
 ## Sources
 
-- Safety protocols from AGENTS.md (homelab rules)
+- Safety protocols from the author's lab operating rules
 - Model management practices from hf_hub documentation
-- Operational safety from state/incidents.md (embedding daemon, container OOM)
+- Operational safety from the source lab's incident log (embedding daemon holding VRAM, container OOM)

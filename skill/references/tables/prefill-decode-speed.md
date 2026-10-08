@@ -2,7 +2,7 @@
 
 Hardware: single 24 GB class RTX card. t/s as logged; runs listed where the source recorded repeats.
 
-## Table 1 — NInfer prefill activations, same artifact (qwen3.8-27b groupwise-int), three runs per target
+## Table 1: NInfer prefill activations, same artifact (qwen3.8-27b groupwise-int), three runs per target
 
 | Mode | Target tokens | Prompt tokens | Prefill t/s | Runs |
 |---|---|---|---|---|
@@ -18,7 +18,7 @@ Hardware: single 24 GB class RTX card. t/s as logged; runs listed where the sour
 
 Source: `state/evals/2026-10-03/ninfer-int8-prefill/prefill.jsonl`.
 
-## Table 2 — perplexity held constant across the two NInfer modes (corpus ninfer-ppl-1m-v1, full, context/stride 4096/2048, kv int8-g64)
+## Table 2: perplexity held constant across the two NInfer modes (corpus ninfer-ppl-1m-v1, full, context/stride 4096/2048, kv int8-g64)
 
 | Domain | Tokens | mean_nll a16 | ppl a16 | mean_nll int8 | ppl int8 |
 |---|---|---|---|---|---|
@@ -32,7 +32,7 @@ Scoring rate: a16 1111.7 tok/s, int8 1961.4 tok/s.
 
 Source: `state/evals/2026-10-03/ninfer-int8-prefill/ppl-a16.txt`, `ppl-int8.txt`.
 
-## Table 3 — bakeoff decode t/s per run (single-file build + 12-bug review harness, llama.cpp entries)
+## Table 3: bakeoff decode t/s per run (single-file build + 12-bug review harness, llama.cpp entries)
 
 | Run | Model | ctx | -ub | Decode t/s |
 |---|---|---|---|---|
@@ -67,7 +67,7 @@ Source: `state/evals/2026-10-03/ninfer-int8-prefill/ppl-a16.txt`, `ppl-int8.txt`
 
 Sources: `state/evals/2026-09-26/r6-vram/results.jsonl`, `state/evals/2026-09-30/r8-rebench/results.jsonl`, `state/evals/2026-09-30/r10-27b-decode/results.jsonl`, `state/evals/2026-10-02/r12-ninfer/results.jsonl`, `state/evals/2026-10-03/r13-ninfer-int8/results.jsonl`, `state/evals/2026-10-02/r11-strata-iq2xs/results.jsonl` + `results.nobudget.jsonl`.
 
-## Table 4 — prefill t/s at depth, llama.cpp needle runs (60k / 120k / 200k char prompts)
+## Table 4: prefill t/s at depth, llama.cpp needle runs (60k / 120k / 200k char prompts)
 
 | Model | ctx | -ub | 60k | 120k | 200k |
 |---|---|---|---|---|---|
@@ -90,7 +90,7 @@ Sources: `state/evals/2026-09-26/r6-vram/results.jsonl`, `state/evals/2026-09-30
 
 Sources: `state/evals/2026-09-26/r7-longctx/results.jsonl`, `state/evals/2026-09-26/r7b-27b-longctx/results.jsonl`, `state/evals/2026-09-30/r9-27b-context/results.jsonl`.
 
-## Table 5 — Strata read t/s and decode-at-depth (IQ2_XS MoE, 31 GB class RAM box)
+## Table 5: Strata read t/s and decode-at-depth (IQ2_XS MoE, 31 GB class RAM box)
 
 | Variant | Short decode t/s | 32K read / decode@depth | 119-120K | 238-240K | 477K |
 |---|---|---|---|---|---|
@@ -106,7 +106,7 @@ Sources: `state/evals/2026-09-26/r7-longctx/results.jsonl`, `state/evals/2026-09
 
 Source: `state/evals/2026-10-03/strata-ctx/RESULTS.md` (main table + 2026-10-03 correction), `state/evals/2026-10-03/strata-k8v4/sweep.jsonl`.
 
-## Table 6 — Strata 512k live check (default prefill, deploy engine + PR #646 + #700)
+## Table 6: Strata 512k live check (default prefill, deploy engine + PR #646 + #700)
 
 | Prompt tokens | Read time (s) | Prefill t/s | Decode t/s at depth |
 |---|---|---|---|
@@ -117,7 +117,7 @@ Source: `state/evals/2026-10-03/strata-ctx/RESULTS.md` (main table + 2026-10-03 
 
 Source: `state/evals/2026-10-03/strata-512k-live/RESULTS.md`.
 
-## Table 7 — Strata PR #646 A/B, arm by arm (kv-q4-262k, alternating arms)
+## Table 7: Strata PR #646 A/B, arm by arm (kv-q4-262k, alternating arms)
 
 | Arm | Run | 32K read t/s | 32K decode@depth | 120K read t/s | 120K decode@depth | Short decode t/s | RAM after (GiB) |
 |---|---|---|---|---|---|---|---|
@@ -128,7 +128,7 @@ Source: `state/evals/2026-10-03/strata-512k-live/RESULTS.md`.
 
 Source: `state/evals/2026-10-03/strata-pr646/ab.log`.
 
-## Table 8 — short-prompt bench, same Strata model at two configs
+## Table 8: short-prompt bench, same Strata model at two configs
 
 | Config | code | reason | agent |
 |---|---|---|---|

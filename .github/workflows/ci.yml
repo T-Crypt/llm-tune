@@ -1,0 +1,18 @@
+name: ci
+on: [push, pull_request]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: bench scripts compile
+        run: python -m py_compile skill/bench/needle.py skill/bench/quality_probe.py skill/bench/mlx_quant_search.py
+      - name: em-dash report outside tests/ (warning only)
+        run: |
+          count=$(grep -rPn "\x{2014}" --include="*.md" --include="*.py" . \
+            | grep -v "^\./tests/" | wc -l || true)
+          echo "em dashes outside tests/: $count"

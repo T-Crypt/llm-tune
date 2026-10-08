@@ -1,6 +1,6 @@
 # MLX + unified memory on Apple Silicon Macs
 
-Tuning guide for all Mac tiers — Mac mini M6, MacBook, Mac Studio, Mac Max — from 16 GB to 512 GB unified memory. Covers MLX engine, Metal backend, wired limit, and the 75% rule.
+Tuning guide for all Mac tiers, Mac mini M6, MacBook, Mac Studio, Mac Max, from 16 GB to 512 GB unified memory. Covers MLX engine, Metal backend, wired limit, and the 75% rule.
 
 **Status:** Documented from cited sources. NOT measured in this repo. No Apple Silicon run exists here; all numbers are from community sources and one orchestrator-verified data point.
 
@@ -8,8 +8,8 @@ Tuning guide for all Mac tiers — Mac mini M6, MacBook, Mac Studio, Mac Max —
 
 ## The two numbers that decide everything on Mac
 
-1. **How much unified memory** — determines which models you can load at all
-2. **Memory bandwidth (GB/s)** — determines how fast they generate. Decoding reads memory linearly, so bandwidth is the speed limiter.
+1. **How much unified memory**: determines which models you can load at all
+2. **Memory bandwidth (GB/s)**: determines how fast they generate. Decoding reads memory linearly, so bandwidth is the speed limiter.
 
 **The 75% rule:** macOS reserves ~25% of unified memory for system. The GPU can use ~75% for model + KV + overhead. Sources: https://llmconfigurator.com/en/guides/mac-local-ai-buying-guide
 
@@ -61,7 +61,7 @@ sudo sysctl iogpu.wired_limit_mb=<MB>  # keep strictly under total RAM
 
 ### Older macOS:
 
-- Ventura / Monterey used `debug.iogpu.wired_limit` in bytes — community-reported, unverified here.
+- Ventura / Monterey used `debug.iogpu.wired_limit` in bytes, community-reported, unverified here.
 
 ---
 
@@ -77,14 +77,14 @@ Verified via HF API:
 
 ```bash
 python bench/mlx_quant_search.py   # estimate
-# Then confirm with a real load — never by arithmetic alone
+# Then confirm with a real load: never by arithmetic alone
 ```
 
 ### Worked example (orchestrator-verified, 2026-10-05):
 
 `mlx-community/Qwen3-Coder-30B-A3B-Instruct-4bit` = **16.0 GiB** of weights.
 - Does NOT fit a 24 GB Mac's default ~16 GB wired limit
-- Fits with limit raised to 20 GB — with ~4 GB left for KV and overhead (tight)
+- Fits with limit raised to 20 GB, with ~4 GB left for KV and overhead (tight)
 - The 20 GB is the general setting for a 24 GB Mac, not a figure reported for that model
 
 ### Ollama as MLX wrapper:
@@ -101,34 +101,34 @@ Ollama previews MLX as an alternative engine (March 2026) and makes it the defau
 - What fits: Cosmos 3 Nano (11.9 GiB), Gemma 3 12B (11.1 GiB)
 - Bandwidth: 170 GB/s → 8B at ~11–22 tok/s
 - Use case: chat, email, light agent tasks
-- **Raise wired limit?** 16 GB Mac defaults to ~16 GB for GPU; models at 16 GiB weight won't fit without raising it to ~20 GB (leaving ~4 GB for everything else — very tight)
+- **Raise wired limit?** 16 GB Mac defaults to ~16 GB for GPU; models at 16 GiB weight won't fit without raising it to ~20 GB (leaving ~4 GB for everything else, very tight)
 
 ### Mac mini M6 32 GB (budget AI)
 
 - Budget: ~24 GB for GPU
-- What fits: Qwen3.5 35B-A3B (23.8 GiB), Qwen3.6 35B-A3B (23.8 GiB) at Q4 — comfortable daily driver
+- What fits: Qwen3.5 35B-A3B (23.8 GiB), Qwen3.6 35B-A3B (23.8 GiB) at Q4, comfortable daily driver
 - Bandwidth: 170 GB/s
 - **Raise wired limit?** Likely yes for 24+ GiB models; default is ~24 GB for GPU at 32 GB RAM
 
 ### Mac mini M5 Pro 64 GB (prosumer)
 
 - Budget: ~48 GB for GPU
-- What fits: Qwen2.5 72B (47.0 GiB) — serious local AI at 307 GB/s
-- Bandwidth: 307 GB/s — significant speed upgrade over M6
+- What fits: Qwen2.5 72B (47.0 GiB), serious local AI at 307 GB/s
+- Bandwidth: 307 GB/s, significant speed upgrade over M6
 
 ### Mac Studio M5 Max 128 GB (workstation)
 
 - Budget: ~96 GB for GPU
 - What fits: GPT-OSS 120B (71.9 GiB), Llama 4.5 Scout (69.4 GiB)
-- Bandwidth: 614 GB/s — 3.6× faster than M6 per the bandwidth ladder
+- Bandwidth: 614 GB/s, 3.6× faster than M6 per the bandwidth ladder
 - Source: ModelFit Mac Studio guide (2026)
 
 ### Mac Studio M5 Ultra 256 GB (frontier)
 
 - Budget: ~192 GB for GPU
 - What fits: DeepSeek V4-Flash (173 GiB) at tight fit
-- Bandwidth: 1,229 GB/s — 7× faster than M6
-- Multi-unit: 5 on a network (user scenario) — Thunderbolt 5 + RDMA, Apple claims 3× inference of one (unbenchmarked)
+- Bandwidth: 1,229 GB/s, 7× faster than M6
+- Multi-unit: 5 on a network (user scenario), Thunderbolt 5 + RDMA, Apple claims 3× inference of one (unbenchmarked)
 
 ### Mac Studio M5 Ultra 512 GB (bleeding edge)
 
@@ -140,7 +140,7 @@ Ollama previews MLX as an alternative engine (March 2026) and makes it the defau
 
 ## Claude Code on Mac
 
-Native Anthropic endpoint via oMLX works — point Claude Code at a local model via env vars:
+Native Anthropic endpoint via oMLX works, point Claude Code at a local model via env vars:
 
 ```bash
 export ANTHROPIC_BASE_URL=<local-mlx-endpoint>
@@ -148,7 +148,7 @@ export ANTHROPIC_AUTH_TOKEN=<token>
 export ANTHROPIC_DEFAULT_SONNET_MODEL=<local-model>
 ```
 
-The `bench/` tools work against `mlx_lm.server` (OpenAI-compatible endpoint). Flags for the server haven't been checked here — confirm with `--help`.
+The `bench/` tools work against `mlx_lm.server` (OpenAI-compatible endpoint). Flags for the server haven't been checked here, confirm with `--help`.
 
 ---
 
@@ -159,7 +159,7 @@ The `bench/` tools work against `mlx_lm.server` (OpenAI-compatible endpoint). Fl
 3. **Bandwidth is the speed limiter.** More RAM ≠ faster. A 64 GB Mac with 307 GB/s beats a 16 GB Mac with 170 GB/s on speed.
 4. **mlx-community quants are multi-file (sharded).** Check safetensors sum via HF API, don't trust single-file estimates.
 5. **macOS version matters.** The 75% fraction varies; newer macOS may differ from community reports.
-6. **No MTP draft context separate allocation** (unlike llama.cpp) — but MLX speculative decoding works differently; confirm with `--help`.
+6. **No MTP draft context separate allocation** (unlike llama.cpp), but MLX speculative decoding works differently; confirm with `--help`.
 7. **Ollama default MLX for >32 GB Macs** (March 2026). Verify which engine Ollama selected.
 
 ---

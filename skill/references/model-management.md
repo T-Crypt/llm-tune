@@ -76,7 +76,7 @@ Track each model in your collection. This is the template for `CONTRIBUTING.md` 
 
 ### Deletion workflow:
 
-1. **Validate with operator** — state what will be removed and kept
+1. **Validate with operator**, state what will be removed and kept
 2. **Check for other instances:**
    ```bash
    # Check for duplicates

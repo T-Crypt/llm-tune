@@ -1,6 +1,6 @@
 # Engine backend-specific fit advice
 
-Every backend users actually run local models on, with backend-specific fit arithmetic, commands, and traps. The core arithmetic (file size + KV + compute + context) is universal — only the memory accounting differs.
+Every backend users actually run local models on, with backend-specific fit arithmetic, commands, and traps. The core arithmetic (file size + KV + compute + context) is universal, only the memory accounting differs.
 
 **The core fit formula (all backends):**
 ```
@@ -36,7 +36,7 @@ nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv
 
 **Traps:**
 - `--fit` and `-ngl` are mutually exclusive: `common_fit_params` aborts when `-ngl` is already set
-- Auto-fit probes VRAM and adjusts context/offload automatically — but it cannot override user-set `-ngl`
+- Auto-fit probes VRAM and adjusts context/offload automatically, but it cannot override user-set `-ngl`
 - Windows: "Prefer No Sysmem Fallback" makes OOM fail loudly instead of hanging; default silently spills to system RAM
 - `--n-cpu-moe` is the correct overflow lever, never `-ngl` for MoE entries
 
@@ -44,7 +44,7 @@ nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv
 
 ## llama.cpp SYCL (Intel Arc GPUs)
 
-**Memory accounting:** Unified memory — iGPU shares system RAM. Model + KV + compute all from one pool. No separate VRAM budget.
+**Memory accounting:** Unified memory, iGPU shares system RAM. Model + KV + compute all from one pool. No separate VRAM budget.
 
 **Key difference from CUDA:** No VRAM ceiling; the constraint is total system RAM minus OS. The fit arithmetic is the same but the budget is larger and less predictable.
 
@@ -57,10 +57,10 @@ nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv
 ```
 
 **Traps:**
-- System RAM is the budget, not VRAM — check total RAM, not GPU specs
+- System RAM is the budget, not VRAM, check total RAM, not GPU specs
 - iGPU allocation in BIOS controls how much of unified memory the GPU can address (BIOS setting, varies by OEM)
 - Memory pressure from other processes is more impactful (shared pool)
-- llama-fit-params works via SYCL backend — same probing arithmetic, different target
+- llama-fit-params works via SYCL backend, same probing arithmetic, different target
 
 **Sources:** Intel Arc local LLM guide (Intel developer, 2026); llama.cpp SYCL documentation; Intel Arc Pro B70 discussion (GitHub, 2026).
 
@@ -76,7 +76,7 @@ nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv
 ```
 
 **Traps:**
-- Less mature memory profiling than CUDA — `KV buffer size` log line may differ from CUDA builds
+- Less mature memory profiling than CUDA (`KV buffer size`) log line may differ from CUDA builds
 - Use llama-fit-params to verify fit, don't trust arithmetic alone
 - Universal backend means cross-platform consistency but potentially slower than native CUDA/HIP
 
@@ -97,7 +97,7 @@ export HSA_OVERRIDE_GFX_VERSION=11.5.1   # Strix Halo (RDNA 3.5)
 **Traps:**
 - `HSA_OVERRIDE_GFX_VERSION` is required; wrong version = fail or suboptimal
 - Linux has better ROCm support; Windows works via WSL2
-- Bandwidth is the bottleneck (Strix 256 GB/s vs RTX 4090 1,008 GB/s) — models that fit run 4–7× slower
+- Bandwidth is the bottleneck (Strix 256 GB/s vs RTX 4090 1,008 GB/s), models that fit run 4–7× slower
 - Same fit arithmetic as CUDA; llama-fit-params works via HIP backend
 
 **Sources:** Strix Halo local LLM guide (LocalAimaster, May 2026); Strix Halo review (Micro Center); Ryzen AI Max PRO 400 (Tech Insider, Sep 2026).
@@ -106,7 +106,7 @@ export HSA_OVERRIDE_GFX_VERSION=11.5.1   # Strix Halo (RDNA 3.5)
 
 ## MLX/Metal (Apple Silicon: all M-series, Mac Mini/MacBook/Studio/Max)
 
-**Memory accounting:** Unified memory pool. macOS reserves ~25% for system (fraction varies: ~2/3 at ≤36 GB, ~3/4 at >36 GB — community sources disagree; read the actual value).
+**Memory accounting:** Unified memory pool. macOS reserves ~25% for system (fraction varies: ~2/3 at ≤36 GB, ~3/4 at >36 GB, community sources disagree; read the actual value).
 
 **The wired limit is the budget:**
 ```bash
@@ -134,10 +134,10 @@ python bench/mlx_quant_search.py   # estimate, then real load to confirm
 | mlx-community/Qwen3-Coder-30B-A3B-Instruct-4bit | 16.0 GiB | No (needs raised limit) | Tight (~4 GB left for KV) |
 
 **Traps:**
-- Weights are NOT the working set — KV and overhead compete for same pool
+- Weights are NOT the working set, KV and overhead compete for same pool
 - A quant that fits on paper can fail on load
 - MLX quants come from `mlx-community` org; multi-file (sharded) downloads
-- No separate VRAM — model + KV + compute all from unified pool
+- No separate VRAM, model + KV + compute all from unified pool
 
 **Sources:** MLX docs (ml-explore.github.io); headroom issue #13 (GitHub); MLX-LM guide (PromptQuorum, 2026); Apple Silicon LLM guide (canitrun.dev, 2026).
 
@@ -153,10 +153,10 @@ ollama pull <model>       # handles download + caching internally
 ollama run <model>        # auto-detects backend
 ```
 
-**Use case:** Simplest entry point for new users. For tuning, treat as llama.cpp underneath — same fit arithmetic, but less control over offload, KV type, and prefill settings.
+**Use case:** Simplest entry point for new users. For tuning, treat as llama.cpp underneath, same fit arithmetic, but less control over offload, KV type, and prefill settings.
 
 **Traps:**
-- Backend detection is hidden — verify which backend it selected
+- Backend detection is hidden, verify which backend it selected
 - Tuning knobs are limited; for serious tuning switch to llama.cpp directly
 - Model format is GGUF internally
 
@@ -164,9 +164,9 @@ ollama run <model>        # auto-detects backend
 
 ## vLLM (NVIDIA, AMD ROCm, cluster serving)
 
-**Memory accounting:** Different from llama.cpp — fit is about batch capacity + KV pool, not just model fit. PagedAttention manages KV in pages, continuous batching handles request scheduling.
+**Memory accounting:** Different from llama.cpp: fit is about batch capacity + KV pool, not model fit alone. PagedAttention manages KV in pages, continuous batching handles request scheduling.
 
-**sm_89 (RTX 4090) specifics:** `references/engine-research-sm89.md` maps which vLLM backends actually run on sm_89 (Triton/FA yes, FlashInfer GDN Blackwell-only), open 4090 correctness/OOM issues, and version churn risks. On a 4090 you get Triton/FA by default — not FlashInfer.
+**sm_89 (RTX 4090) specifics:** `references/engine-research-sm89.md` maps which vLLM backends actually run on sm_89 (Triton/FA yes, FlashInfer GDN Blackwell-only), open 4090 correctness/OOM issues, and version churn risks. On a 4090 you get Triton/FA by default, not FlashInfer.
 
 **vLLM fit arithmetic:**
 ```
@@ -199,7 +199,7 @@ vllm serve <model2> --port 8001
 **Traps:**
 - `--fit`/`-ngl` conflicts don't apply (vLLM doesn't use them)
 - KV quantization quality beyond needle recall is unmeasured in vLLM
-- Engine defaults differ per version — pin versions
+- Engine defaults differ per version, pin versions
 - `--max-model-len` must match client context cap or requests get clipped/400'd
 - Multi-endpoint deployment: one model per endpoint (simple) vs multi-model behind one endpoint (requires routing logic)
 

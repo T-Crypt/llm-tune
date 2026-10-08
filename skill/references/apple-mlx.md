@@ -16,7 +16,7 @@ wire down part of it.
   Community source: https://github.com/blaine-hiers/headroom/issues/13
 - Worked example (community-reported, not measured here): a 24 GB Mac defaults to about 16 GB
   available to the GPU. Raising the limit to 20 GB is a commonly used setting for a 24 GB Mac in
-  general — it leaves several GB for macOS. It is **not** a figure reported for any particular
+  general, it leaves several GB for macOS. It is **not** a figure reported for any particular
   model; do not present it as one. The model example below happens to need a raised limit, and
   20 GB is the general setting used to show the arithmetic.
 - Read the real current limit, do not assume it:
@@ -29,11 +29,11 @@ wire down part of it.
 - `sudo sysctl iogpu.wired_limit_mb=<MB>` (MLX docs).
 - The limit "should remain strictly less than the total memory size" (MLX docs). In practice
   practitioners stop around 85–90% of RAM.
-- Raise in steps, close other apps, and verify with a real load plus the bench — never by
+- Raise in steps, close other apps, and verify with a real load plus the bench, never by
   arithmetic alone. A model that fits on paper can still fail once KV and overhead are added.
 - The sysctl resets on reboot (community guides). Persisting it via `/etc/sysctl.conf` is
   reported but unverified here.
-- Older macOS (Ventura / Monterey) used `debug.iogpu.wired_limit` in bytes — community-reported,
+- Older macOS (Ventura / Monterey) used `debug.iogpu.wired_limit` in bytes, community-reported,
   unverified here.
 
 ## Quants and the fit check
@@ -45,7 +45,7 @@ wire down part of it.
     `*.safetensors`
 - Measured example (orchestrator-verified, 2026-10-05):
   `mlx-community/Qwen3-Coder-30B-A3B-Instruct-4bit` = 16.0 GiB of weights. That does not fit a
-  24 GB Mac's default ~16 GB wired limit, and fits with the limit raised to 20 GB — with about
+  24 GB Mac's default ~16 GB wired limit, and fits with the limit raised to 20 GB, with about
   4 GB left for KV and overhead, which is tight.
 - Weights are only part of the budget. KV cache, the model's fixed overhead, and macOS all
   compete for the same wired pool. Use `bench/mlx_quant_search.py` for the estimate, then
@@ -54,7 +54,7 @@ wire down part of it.
 ## Server
 
 `mlx_lm.server` exposes an OpenAI-compatible endpoint, so `bench/needle.py` and
-`bench/quality_probe.py` work against it. Its flags have not been checked here — confirm with
+`bench/quality_probe.py` work against it. Its flags have not been checked here, confirm with
 `--help` on the user's install.
 
 ## Broader Mac coverage

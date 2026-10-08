@@ -2,7 +2,7 @@
 
 Architecture-dependent: only full-attention layers carry a growing KV cache; hybrid (Mamba / Gated DeltaNet) layers hold fixed state. Hardware: single 24 GB class RTX card.
 
-## Table 1 — KV cache size at q8_0 by context (derived arithmetic, 27B dense model: 64 layers, 16 full-attention, 4 KV heads, head dim 256)
+## Table 1: KV cache size at q8_0 by context (derived arithmetic, 27B dense model: 64 layers, 16 full-attention, 4 KV heads, head dim 256)
 
 | ctx | KV cache @ q8_0 (GiB) |
 |---|---|
@@ -14,7 +14,7 @@ Per-token derivation: 2 x 4 x 256 x 1.0625 B = 2,176 B per attention layer per t
 
 Source: `state/evals/2026-09-25/gain-research.md` (Note 1c, 1f).
 
-## Table 2 — fixed non-file VRAM overhead, calibrated against one measured peak (131k ctx, q8_0 KV, mmproj loaded)
+## Table 2: fixed non-file VRAM overhead, calibrated against one measured peak (131k ctx, q8_0 KV, mmproj loaded)
 
 | Component | GiB |
 |---|---|
@@ -28,7 +28,7 @@ The 2.85 GiB residual is derived from a single measurement; the hypothesis for i
 
 Source: `state/evals/2026-09-25/gain-research.md` (Note 1d).
 
-## Table 3 — the context/quant trade (24 GB budget, q8_0 KV)
+## Table 3: the context/quant trade (24 GB budget, q8_0 KV)
 
 | ctx | KV (GiB) | Fixed total (GiB) | Largest MTP quant with >= 0.9 GiB free |
 |---|---|---|---|
@@ -38,13 +38,13 @@ Source: `state/evals/2026-09-25/gain-research.md` (Note 1d).
 
 Source: `state/evals/2026-09-25/gain-research.md` (Note 1f).
 
-## Table 4 — hybrid architecture: fixed state instead of growing KV (30B MoE, 52 layers = 6 attention + 23 Mamba + 23 MoE)
+## Table 4: hybrid architecture: fixed state instead of growing KV (30B MoE, 52 layers = 6 attention + 23 Mamba + 23 MoE)
 
-At 262,144 ctx: ~1.50 GiB attention KV + ~46 MiB Mamba state — the full window stays cheap. (Derived from architecture, not measured on this box.)
+At 262,144 ctx: ~1.50 GiB attention KV + ~46 MiB Mamba state, the full window stays cheap. (Derived from architecture, not measured on this box.)
 
 Source: `state/evals/2026-09-25/nemotron-research.md`.
 
-## Table 5 — Strata KV footprint by variant (engine log lines, IQ2_XS MoE, 24 GB card, 31 GB class RAM box)
+## Table 5: Strata KV footprint by variant (engine log lines, IQ2_XS MoE, 24 GB card, 31 GB class RAM box)
 
 | Variant | KV cells in VRAM | KV in pinned host RAM (GiB) |
 |---|---|---|
@@ -55,7 +55,7 @@ Source: `state/evals/2026-09-25/nemotron-research.md`.
 
 Source: `state/evals/2026-10-03/strata-k8v4/sweep.jsonl` (`engine_mem_lines`).
 
-## Table 6 — NInfer state pools, 27B groupwise-int at 262k (engine startup accounting, bytes as logged)
+## Table 6: NInfer state pools, 27B groupwise-int at 262k (engine startup accounting, bytes as logged)
 
 | Pool | Bytes | GiB |
 |---|---|---|
@@ -68,6 +68,6 @@ Source: `state/evals/2026-10-03/strata-k8v4/sweep.jsonl` (`engine_mem_lines`).
 | runtime_reservation | 5,701,866,752 | 5.31 |
 | kv_headroom | 0 | 0 |
 
-Host KV pinned at startup: 8.00 GiB; host state pinned: 1.15 GiB; weights 16.9 GiB. `kv_headroom_bytes=0` — the KV budget was fully consumed at startup.
+Host KV pinned at startup: 8.00 GiB; host state pinned: 1.15 GiB; weights 16.9 GiB. `kv_headroom_bytes=0`, the KV budget was fully consumed at startup.
 
 Source: `state/evals/2026-10-02/r12-ninfer/side-NInfer-Qwen3.8-27B.log`.

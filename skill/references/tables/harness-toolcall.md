@@ -2,7 +2,7 @@
 
 Parser tolerance as a tunable: same model, same tasks, strict parser vs tolerant parser (`--tolerant-tool-calls`). Hardware: single 24 GB class RTX card.
 
-## Table 1 — NInfer tool-call stress, strict vs tolerant parser (8 tasks x 2 rounds)
+## Table 1: NInfer tool-call stress, strict vs tolerant parser (8 tasks x 2 rounds)
 
 | Round | Task | Strict status | Strict t/s | Strict s | Tolerant status | Tolerant t/s | Tolerant s |
 |---|---|---|---|---|---|---|---|
@@ -23,11 +23,11 @@ Parser tolerance as a tunable: same model, same tasks, strict parser vs tolerant
 | 1 | 6 | ok | 117.12177948719797 | 5 | ok | 110.86107800790776 | 6 |
 | 1 | 7 | ok | 126.91509493717847 | 5 | ok | 109.992222813788 | 40 |
 
-Strict: 5/16 fallback (model emitted the call in text, parser rejected it — the emitted content contained `</parameter>` inside a parameter value, which closed the block early). Tolerant: 0/16.
+Strict: 5/16 fallback (model emitted the call in text, parser rejected it, the emitted content contained `</parameter>` inside a parameter value, which closed the block early). Tolerant: 0/16.
 
 Source: `state/evals/2026-10-03/ninfer-toolcall/results-strict.jsonl`, `results-tolerant.jsonl`.
 
-## Table 2 — thinking-off / no-tool-call observations in the bakeoff harness
+## Table 2: thinking-off / no-tool-call observations in the bakeoff harness
 
 | Run | Model | Observation |
 |---|---|---|
@@ -40,7 +40,7 @@ Source: `state/evals/2026-10-03/ninfer-toolcall/results-strict.jsonl`, `results-
 
 Source: `state/evals/2026-09-25/full.log`, `state/evals/2026-09-25/r2.log`, `state/evals/2026-10-02/r11-strata-iq2xs/run.log`, `run.nobudget.log`.
 
-## Table 3 — verifier-backed tool-call tasks, role suite 2026-09-25 (2 tasks x 2 attempts)
+## Table 3: verifier-backed tool-call tasks, role suite 2026-09-25 (2 tasks x 2 attempts)
 
 | Role | tool-call pass |
 |---|---|

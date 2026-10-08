@@ -2,7 +2,7 @@
 
 Needle-in-haystack: three planted facts at ~10% / 50% / 90% depth (prompt sizes 60,000 / 120,000 / 200,000 chars). Recall is found/total per depth. Hardware: single 24 GB class RTX card.
 
-## Table 1 — r7 long-context sweep (needle task)
+## Table 1: r7 long-context sweep (needle task)
 
 | Model | ctx | -ub | Depth (prompt chars) | Found / total | Notes |
 |---|---|---|---|---|---|
@@ -13,13 +13,13 @@ Needle-in-haystack: three planted facts at ~10% / 50% / 90% depth (prompt sizes 
 | AgentFast-262K | 262144 | 1024 | 120,000 | 3/3 | |
 | AgentFast-262K | 262144 | 1024 | 200,000 | 3/3 | |
 | Quality-131K-ub512 | 131072 | 512 | 60,000 | 3/3 | |
-| Quality-131K-ub512 | 131072 | 512 | 120,000 | 0/3 | HTTP 400 — prompt exceeds declared window |
+| Quality-131K-ub512 | 131072 | 512 | 120,000 | 0/3 | HTTP 400, prompt exceeds declared window |
 | Quality-131K-ub1024 | 131072 | 1024 | 60,000 | 3/3 | |
-| Quality-131K-ub1024 | 131072 | 1024 | 120,000 | 0/3 | HTTP 400 — prompt exceeds declared window |
+| Quality-131K-ub1024 | 131072 | 1024 | 120,000 | 0/3 | HTTP 400, prompt exceeds declared window |
 
 Source: `state/evals/2026-09-26/r7-longctx/results.jsonl`.
 
-## Table 2 — r7b, 27B dense models within their declared window
+## Table 2: r7b, 27B dense models within their declared window
 
 | Model | ctx | -ub | Depth (prompt chars) | Found / total |
 |---|---|---|---|---|
@@ -30,7 +30,7 @@ Source: `state/evals/2026-09-26/r7-longctx/results.jsonl`.
 
 Source: `state/evals/2026-09-26/r7b-27b-longctx/results.jsonl`.
 
-## Table 3 — r9 context ladder, 27B quant pair (needle, depths 60k / 120k / 200k chars)
+## Table 3: r9 context ladder, 27B quant pair (needle, depths 60k / 120k / 200k chars)
 
 | Entry | Quant | ctx | -ub | KV | MTP | 60k | 120k | 200k | Notes |
 |---|---|---|---|---|---|---|---|---|---|
@@ -47,7 +47,7 @@ Source: `state/evals/2026-09-26/r7b-27b-longctx/results.jsonl`.
 
 Source: `state/evals/2026-09-30/r9-27b-context/results.jsonl`.
 
-## Table 4 — Strata sparse-attention recall at depth (IQ2_XS MoE, synthetic service-log haystack, planted number)
+## Table 4: Strata sparse-attention recall at depth (IQ2_XS MoE, synthetic service-log haystack, planted number)
 
 | Variant | 32K prompt | 120K prompt | 240K prompt | 480K prompt | Recall |
 |---|---|---|---|---|---|
@@ -59,7 +59,7 @@ Source: `state/evals/2026-09-30/r9-27b-context/results.jsonl`.
 
 Source: `state/evals/2026-10-03/strata-ctx/RESULTS.md`.
 
-## Table 5 — Strata 512k live check (deploy engine + PR #646 + #700, greedy, thinking off)
+## Table 5: Strata 512k live check (deploy engine + PR #646 + #700, greedy, thinking off)
 
 | Prompt tokens | Recall |
 |---|---|
@@ -70,7 +70,7 @@ Source: `state/evals/2026-10-03/strata-ctx/RESULTS.md`.
 
 Source: `state/evals/2026-10-03/strata-512k-live/RESULTS.md`.
 
-## Table 6 — Strata PR #646 A/B, same variant (kv-q4-262k), two arms x two runs
+## Table 6: Strata PR #646 A/B, same variant (kv-q4-262k), two arms x two runs
 
 | Arm | 32K prompt | 120K prompt |
 |---|---|---|
@@ -81,7 +81,7 @@ Source: `state/evals/2026-10-03/strata-512k-live/RESULTS.md`.
 
 Source: `state/evals/2026-10-03/strata-pr646/ab.log`.
 
-## Table 7 — Strata k8v4 KV variants, recall at 32K / 119K / 238K
+## Table 7: Strata k8v4 KV variants, recall at 32K / 119K / 238K
 
 | Variant | 32K | 119K | 238K |
 |---|---|---|---|

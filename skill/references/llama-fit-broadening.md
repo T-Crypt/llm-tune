@@ -1,13 +1,13 @@
 # llama-fit-params: broadening across all backends
 
-The user directive was clear: **"llama-fit-params don't need to be so strict on WHAT gets them to begin with."** The tool works across ALL modern llama.cpp backends, not just NVIDIA CUDA.
+Design brief from the tool's author: "llama-fit-params don't need to be so strict on WHAT gets them to begin with." The tool works across all modern llama.cpp backends; CUDA is only one of them.
 
 **Verified:** llama-fit-params works across:
-- ✅ CUDA (NVIDIA) — currently in the skill
-- ✅ SYCL (Intel Arc) — verified by community (Reddit, GitHub discussions)
-- ✅ Vulkan (universal) — works on Intel, AMD, Apple
-- ✅ HIP/ROCm (AMD Strix/Gorgon Halo, RX 7900 XTX) — verified in Strix Halo guides
-- ⚠️ Metal/MLX — different memory accounting; `bench/mlx_quant_search.py` serves the same role
+- ✅ CUDA (NVIDIA), currently in the skill
+- ✅ SYCL (Intel Arc), verified by community (Reddit, GitHub discussions)
+- ✅ Vulkan (universal), works on Intel, AMD, Apple
+- ✅ HIP/ROCm (AMD Strix/Gorgon Halo, RX 7900 XTX), verified in Strix Halo guides
+- ⚠️ Metal/MLX, different memory accounting; `bench/mlx_quant_search.py` serves the same role
 
 ---
 
@@ -38,7 +38,7 @@ Only the **memory accounting** differs per backend:
 
 ### Intel Arc (SYCL)
 - Same KV math, different allocation shape
-- iGPU shares system RAM — no separate VRAM budget
+- iGPU shares system RAM, no separate VRAM budget
 - Use SYCL or Vulkan backend
 - Fit probing works the same way; the budget is total system RAM minus OS
 - **BIOS setting:** iGPU allocation in BIOS controls GPU addressable memory (varies by OEM)
@@ -49,11 +49,11 @@ Only the **memory accounting** differs per backend:
 - `HSA_OVERRIDE_GFX_VERSION` required (e.g., 11.5.1 for Strix Halo)
 - Fit probing works; verified in LocalAimaster Strix Halo guide
 
-### Apple Silicon (Metal/MLX — equivalent tool)
+### Apple Silicon (Metal/MLX: equivalent tool)
 - Different arithmetic: model + KV share one pool, macOS reserves 25%
 - `bench/mlx_quant_search.py` serves the same role as llama-fit-params for MLX
 - Check: `sysctl iogpu.wired_limit_mb` (the budget) and `mx.metal.device_info()` (MLX's view)
-- Wired limit is the budget — model + KV must fit in ~75% of total RAM
+- Wired limit is the budget, model + KV must fit in ~75% of total RAM
 
 ---
 
@@ -72,10 +72,10 @@ Only the **memory accounting** differs per backend:
 
 ---
 
-## Common traps across ALL backends
+## Common traps across all backends
 
 1. **Fit on paper ≠ fit in practice.** 0.17 GiB headroom failed on the measured card. Any backend can run out mid-inference as buffers grow with depth.
-2. **The engine's own log is authoritative.** `KV buffer size`, `compute buffer size`, model file size — read these, don't trust arithmetic alone.
+2. **The engine's own log is authoritative.** `KV buffer size`, `compute buffer size`, model file size, read these, don't trust arithmetic alone.
 3. **Any PID on the card that is not the model server is a bug.** An embedding daemon held 11.3 GiB after its job ended. This applies to all backends on all hardware.
 4. **OS matters.** Windows silently spills VRAM overflow to system RAM and decodes 10–20% slower than Linux on the same card. macOS has its own memory reservation. Linux is the most predictable.
 5. **Version pinning.** Flag names and defaults change between builds (`--draft-max` removed → `--spec-draft-n-max`). Pin runtime versions.
@@ -87,12 +87,12 @@ Only the **memory accounting** differs per backend:
 
 For any backend, on any hardware:
 
-1. **Read the engine's buffer log** — model file size, KV buffer, compute buffer, peak VRAM
-2. **Compare against available memory** — the budget is backend-specific (see table above)
-3. **Run the bench** — `bench/quick_bench.md` measures: memory accounting, prefill/decode at depth, recall at depth, quality probe
-4. **Hold quality constant** — a speed claim without a quality metric is not a result
-5. **Repeat** — run-to-run variance is ±1–2 bugs on a 12-bug test
-6. **Publish corrections** — if a number is wrong, fix it and publish a dated correction
+1. **Read the engine's buffer log**: model file size, KV buffer, compute buffer, peak VRAM
+2. **Compare against available memory**: the budget is backend-specific (see table above)
+3. **Run the bench** (`bench/quick_bench.md`) measures: memory accounting, prefill/decode at depth, recall at depth, quality probe
+4. **Hold quality constant**: a speed claim without a quality metric is not a result
+5. **Repeat**: run-to-run variance is ±1–2 bugs on a 12-bug test
+6. **Publish corrections**: if a number is wrong, fix it and publish a dated correction
 
 ---
 

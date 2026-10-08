@@ -1,15 +1,15 @@
 # Intel Arc & AMD unified memory (Strix/Gorgon Halo)
 
-Tuning for Intel Arc GPUs and AMD APU-based systems (Strix Halo, Gorgon Halo) — all unified memory, no discrete NVIDIA VRAM.
+Tuning for Intel Arc GPUs and AMD APU-based systems (Strix Halo, Gorgon Halo), all unified memory, no discrete NVIDIA VRAM.
 
 ---
 
 ## The shared reality: unified memory
 
-No VRAM split — model weights, KV cache, compute buffers, and OS all share one memory pool. This means:
+No VRAM split, model weights, KV cache, compute buffers, and OS all share one memory pool. This means:
 - **More capacity** than a discrete card (Strix Halo: 128 GB, Gorgon Halo: 192 GB)
 - **Less bandwidth** than a discrete card (Strix: 256 GB/s, Gorgon: 273 GB/s vs RTX 4090: 1,008 GB/s)
-- **The trade is capacity vs speed** — big models fit, they run slower
+- **The trade is capacity vs speed**: big models fit, they run slower
 
 ---
 
@@ -70,8 +70,8 @@ Same as all backends: read engine's buffer log (`model file`, `KV buffer size`, 
 
 | Model | Quant | Fits |
 |---|---|---|
-| 70B | Q4 | ~40 GB — fits comfortably |
-| 70B | Q8 | ~75 GB — fits with moderate context |
+| 70B | Q4 | ~40 GB, fits comfortably |
+| 70B | Q8 | ~75 GB, fits with moderate context |
 | 100B MoE | 4-bit active experts | Fits |
 | DeepSeek V4-Flash | Default | Fits (128 GB total, ~96 GB GPU) |
 
@@ -162,7 +162,7 @@ Available but bandwidth-bound. Same constraint as llama.cpp: 256 GB/s vs 1,008 G
 
 - **Linux:** Better ROCm support, more stable, preferred for Strix/Gorgon
 - **Windows:** Works via WSL2; some ROCm features may be limited
-- **macOS:** Not applicable (different unified-memory stack — see `mlx-mac-tuning.md`)
+- **macOS:** Not applicable (different unified-memory stack, see `mlx-mac-tuning.md`)
 
 ---
 

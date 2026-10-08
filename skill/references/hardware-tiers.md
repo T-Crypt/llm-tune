@@ -2,17 +2,17 @@
 
 Every hardware class users actually run local models on, from 8 GB budget cards to 512 GB Mac Studios and DGX Spark clusters. Each tier includes: what fits, what context is affordable, failure modes, engine-specific fit advice, and the bench to run on that box.
 
-**This file replaces the repo's single-card assumption.** Every number in `references/tables/` was measured on one 24 GB RTX 4090-class card. The tables in this file are tier rules (what changes where) — none of these numbers are measurements from this repo. They are compiled from cited sources; verify them on your own box before quoting.
+**This file replaces the repo's single-card assumption.** Every number in `references/tables/` was measured on one 24 GB RTX 4090-class card. The tables in this file are tier rules (what changes where), none of these numbers are measurements from this repo. They are compiled from cited sources; verify them on your own box before quoting.
 
 ---
 
 ## The two numbers that decide everything
 
-For any hardware class: **(1) how much memory the model can address** and **(2) how fast that memory is**. On discrete NVIDIA cards these are VRAM size and bandwidth. On unified-memory systems (Apple Silicon, AMD Strix/Gorgon Halo, Intel Arc iGPU) they're the same pool — model weights, KV cache, compute buffers, and OS all compete for one address space.
+For any hardware class: **(1) how much memory the model can address** and **(2) how fast that memory is**. On discrete NVIDIA cards these are VRAM size and bandwidth. On unified-memory systems (Apple Silicon, AMD Strix/Gorgon Halo, Intel Arc iGPU) they're the same pool, model weights, KV cache, compute buffers, and OS all compete for one address space.
 
 ---
 
-## Tier 0 — 8 GB entry (RTX 4060, Intel Arc B580, Mac mini M6 base)
+## Tier 0: 8 GB entry (RTX 4060, Intel Arc B580, Mac mini M6 base)
 
 **What fits:**
 | Model class | Quant | Notes |
@@ -22,17 +22,17 @@ For any hardware class: **(1) how much memory the model can address** and **(2) 
 | 7B | Q4_K_S | RTX 4060: workable, no headroom for context |
 
 **Failure modes:**
-- RTX 4060 8 GB: anything above 8B Q4 is over budget. Context > 8k is a luxury. MCP bloat is lethal — must debloat to 5–7 tools.
+- RTX 4060 8 GB: anything above 8B Q4 is over budget. Context > 8k is a luxury. MCP bloat is lethal, must debloat to 5–7 tools.
 - Intel Arc B580 12 GB: no CUDA. Use SYCL or Vulkan backend. 7–14B Q4 quant fits. llama-fit-params works via SYCL/Vulkan (see `engine-backends.md`).
 - Mac mini M6 16 GB unified: macOS reserves ~25% → ~12 GB usable. Cosmos 3 Nano (11.9 GiB), Gemma 3 12B (11.1 GiB). 170 GB/s bandwidth → 8B at ~11–22 tok/s. Entry level: chat and email only.
 
-**Key insight:** Users at this tier need the HARDEST advice — every byte counts, harness debloat is survival not optimization.
+**The constraint at this tier:** every byte counts; harness debloat is survival, not optimisation.
 
 **Sources:** Intel Arc B580 local LLM suitability (PromptQuorum, 2026); Mac mini M6 16 GB/32 GB specs (Apple, 2026); llama.cpp SYCL documentation (Intel).
 
 ---
 
-## Tier 1 — 12–16 GB consumer (RTX 4070 Ti, RTX 4080, Mac mini M6 24/32 GB)
+## Tier 1: 12–16 GB consumer (RTX 4070 Ti, RTX 4080, Mac mini M6 24/32 GB)
 
 **What fits:**
 | Hardware | Usable memory | What fits |
@@ -40,15 +40,15 @@ For any hardware class: **(1) how much memory the model can address** and **(2) 
 | RTX 4070 Ti 12 GB | ~10 GB | 13–14B Q4_K_M; 7B at higher quants |
 | RTX 4080 16 GB | ~14 GB | 17B Q4_K_M (tight); 13B comfortable |
 | Mac mini M6 24 GB | ~18 GB | Mistral Small 3 (17.2 GiB), Devstral Small 2 (17.0 GiB) |
-| Mac mini M6 32 GB | ~24 GB | Qwen3.5 35B-A3B (23.8 GiB), Qwen3.6 35B-A3B (23.8 GiB) — comfortable daily driver at 170 GB/s |
+| Mac mini M6 32 GB | ~24 GB | Qwen3.5 35B-A3B (23.8 GiB), Qwen3.6 35B-A3B (23.8 GiB), comfortable daily driver at 170 GB/s |
 
 **Context budget:** At 0.033 GiB/1k tokens (q8_0 KV, dense model), 32k context = 1.06 GiB on a 24 GB budget machine. Drop context to buy a quant tier (131k → 65k buys IQ3_M → Q4_K_M on the measured card).
 
 ---
 
-## Tier 2 — 24 GB sweet spot (RTX 4090)
+## Tier 2: 24 GB sweet spot (RTX 4090)
 
-**This is the repo's measured class.** All `references/tables/` numbers are from this tier. No changes needed here — it's the proven base.
+**This is the repo's measured class.** All `references/tables/` numbers are from this tier. No changes needed here, it's the proven base.
 
 | Property | Value |
 |---|---|
@@ -61,7 +61,7 @@ For any hardware class: **(1) how much memory the model can address** and **(2) 
 
 ---
 
-## Tier 3 — 32 GB high-end (RTX 5090)
+## Tier 3: 32 GB high-end (RTX 5090)
 
 | Property | Value |
 |---|---|
@@ -77,7 +77,7 @@ For any hardware class: **(1) how much memory the model can address** and **(2) 
 
 ---
 
-## Tier 4 — 48 GB professional (RTX 6000 Ada, RX 7900 XTX)
+## Tier 4: 48 GB professional (RTX 6000 Ada, RX 7900 XTX)
 
 | Hardware | VRAM | Bandwidth | What it runs |
 |---|---|---|---|
@@ -88,9 +88,9 @@ For any hardware class: **(1) how much memory the model can address** and **(2) 
 
 ---
 
-## Tier 5 — 64–128 GB unified (Mac Studio M5 Max 128 GB, Strix Halo 128 GB, Mac mini M5 Pro 64 GB)
+## Tier 5: 64–128 GB unified (Mac Studio M5 Max 128 GB, Strix Halo 128 GB, Mac mini M5 Pro 64 GB)
 
-### Apple Silicon (unified memory — the 75% rule applies)
+### Apple Silicon (unified memory: the 75% rule applies)
 
 | Hardware | Total RAM | Usable for GPU | Bandwidth | What fits |
 |---|---|---|---|---|
@@ -105,7 +105,7 @@ For any hardware class: **(1) how much memory the model can address** and **(2) 
 
 **Sources:** Mac local LLM buying guide (LLM Configurator, Sep 2026); Mac Studio LLM guide (ModelFit, 2026); Apple Silicon LLM guide (canitrun.dev, 2026).
 
-### AMD Strix Halo (unified memory — separate VRAM budget)
+### AMD Strix Halo (unified memory: separate VRAM budget)
 
 | Property | Value |
 |---|---|
@@ -124,7 +124,7 @@ For any hardware class: **(1) how much memory the model can address** and **(2) 
 
 ---
 
-## Tier 6 — 192–256 GB unified (Gorgon Halo 192 GB, Mac Studio M5 Ultra 256 GB)
+## Tier 6: 192–256 GB unified (Gorgon Halo 192 GB, Mac Studio M5 Ultra 256 GB)
 
 ### Gorgon Halo PRO 495 (AMD Ryzen AI Max PRO 400)
 
@@ -145,7 +145,7 @@ Same as tier 5 but at frontier scale. 192 GB usable, 1,229 GB/s bandwidth.
 
 ---
 
-## Tier 7 — 512 GB+ frontier (Mac Studio M5 Ultra 512 GB, 5× DGX Spark, 3× RTX 6000, H100/H200 class)
+## Tier 7: 512 GB+ frontier (Mac Studio M5 Ultra 512 GB, 5× DGX Spark, 3× RTX 6000, H100/H200 class)
 
 ### Multi-box clusters
 
@@ -153,7 +153,7 @@ Same as tier 5 but at frontier scale. 192 GB usable, 1,229 GB/s bandwidth.
 |---|---|---|---|
 | 5× DGX Spark | 320 GB (64 GB each, GB10 GPU) | ConnectX-7 RDMA, tensor-parallel vLLM, sparkrun one-command | Models >200B, multi-tenant serving |
 | 3× RTX 6000 | 144 GB total (48 GB each) | vLLM or llama.cpp distributed | 70B+ across nodes, 27B at Q8 per node |
-| 5× Mac Studio Max | 1,280 GB unified (256 GB each) | Thunderbolt 5 + RDMA (Apple claims 3× inference of one — unbenchmarked) | Frontier Mac network |
+| 5× Mac Studio Max | 1,280 GB unified (256 GB each) | Thunderbolt 5 + RDMA (Apple claims 3× inference of one, unbenchmarked) | Frontier Mac network |
 | H100/H200 class | 80–141 GB per GPU | vLLM data parallel, PagedAttention | Data center-class local serving |
 
 **Cluster tuning is about load balancing and KV distribution, not per-node tuning.** The per-node advice from this skill still applies. The cluster adds resource orchestration (vLLM tensor-parallel, nginx/vLLM Router load balancing).
@@ -200,5 +200,5 @@ Same as tier 5 but at frontier scale. 192 GB usable, 1,229 GB/s bandwidth.
 | "I have an Apple Silicon Mac" | 0–7 (depends on model) | Check `iogpu.wired_limit_mb`; 75% rule; see `mlx-mac-tuning.md` |
 | "I have a Strix Halo / Gorgon Halo" | 5–6 | ROCm/HIP backend; BIOS GPU allocation; 256/273 GB/s is slow but big fits |
 | "I have an Intel Arc" | 0 | SYCL or Vulkan backend; no CUDA; 12 GB VRAM on B580 |
-| "I run vLLM on a network" | 3–7 | `vllm-local.md`; batch capacity + KV pool, not just model fit |
+| "I run vLLM on a network" | 3–7 | `vllm-local.md`; batch capacity + KV pool, not model fit alone |
 | "I have a server / DGX cluster" | 7 | Tensor parallel, data parallel, load balancing; per-node advice still applies |

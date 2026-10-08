@@ -2,13 +2,13 @@
 
 Hardware: single 24 GB class RTX card. Acceptance is logged as accepted/attempted tokens.
 
-## Table 1 — MTP tensor cost
+## Table 1: MTP tensor cost
 
-Flat +0.42 GiB (451,320,768 bytes measured on the IQ3_M pair) across every quant in the repo — the Q8_0 MTP tensors. Exception: the LOW tier files carry MTP tensors at lower precision (LOW-MTP-IQ4_XS is 1.19 GiB smaller than regular IQ4_XS; precision claim unverified). The MTP draft context is a separate allocation that can OOM even when the target model fits.
+Flat +0.42 GiB (451,320,768 bytes measured on the IQ3_M pair) across every quant in the repo, the Q8_0 MTP tensors. Exception: the LOW tier files carry MTP tensors at lower precision (LOW-MTP-IQ4_XS is 1.19 GiB smaller than regular IQ4_XS; precision claim unverified). The MTP draft context is a separate allocation that can OOM even when the target model fits.
 
 Source: `state/evals/2026-09-25/gain-research.md` (Note 1b), `state/evals/2026-09-26/r6-vram/` (Quality-163K load_failed).
 
-## Table 2 — draft acceptance, round 1 bakeoff (8-bug review, 8192 cap)
+## Table 2: draft acceptance, round 1 bakeoff (8-bug review, 8192 cap)
 
 | Model | Draft acc (accepted/attempted) | Decode t/s |
 |---|---|---|
@@ -49,7 +49,7 @@ Source: `state/evals/2026-09-25/gain-research.md` (Note 1b), `state/evals/2026-0
 
 Source: `state/evals/2026-09-25/full.log`.
 
-## Table 3 — draft acceptance, round 2 (12-bug review)
+## Table 3: draft acceptance, round 2 (12-bug review)
 
 | Model | Draft acc | Decode t/s |
 |---|---|---|
@@ -73,7 +73,7 @@ Source: `state/evals/2026-09-25/full.log`.
 
 Source: `state/evals/2026-09-25/r2.log`.
 
-## Table 4 — draft acceptance, r6 VRAM round (262k, 12-bug review)
+## Table 4: draft acceptance, r6 VRAM round (262k, 12-bug review)
 
 | Model | Draft acc | Decode t/s |
 |---|---|---|
@@ -93,7 +93,7 @@ Source: `state/evals/2026-09-25/r2.log`.
 
 Source: `state/evals/2026-09-26/r6-vram/r6.log`.
 
-## Table 5 — NInfer draft-depth sweep (qwen3.8-27b groupwise-int, 262k, three runs per workload, mean t/s)
+## Table 5: NInfer draft-depth sweep (qwen3.8-27b groupwise-int, 262k, three runs per workload, mean t/s)
 
 | Label | Flags | VRAM (MiB) | Code | Agent | Prose | Mean |
 |---|---|---|---|---|---|---|
@@ -107,7 +107,7 @@ Per-run values in the source. d3 best overall mean, d5 best prose, d3 best code;
 
 Source: `state/evals/2026-10-03/ninfer-sweep1/results.jsonl`.
 
-## Table 6 — Strata MTP draft-head memory (engine log lines, IQ2_XS)
+## Table 6: Strata MTP draft-head memory (engine log lines, IQ2_XS)
 
 | Variant | Draft layer VRAM (MiB) | Draft head over tokens |
 |---|---|---|
@@ -118,4 +118,4 @@ Source: `state/evals/2026-10-03/ninfer-sweep1/results.jsonl`.
 
 Source: `state/evals/2026-10-03/strata-k8v4/sweep.jsonl` (`engine_mem_lines`).
 
-Reference datapoint (model card, not measured here): Q4_K_S regular ~75 t/s vs MTP >90 t/s at 60% acceptance, 2 tokens — roughly +20% at 60% acceptance; the ratio, not the absolute t/s, is the transferable part. Gate: below ~50% acceptance, regular quants run faster. Source: `state/evals/2026-09-25/gain-research.md` (Note 3), `runbooks/llama-swap.md` (bench gate >= 0.4).
+Reference datapoint (model card, not measured here): Q4_K_S regular ~75 t/s vs MTP >90 t/s at 60% acceptance, 2 tokens, roughly +20% at 60% acceptance; the ratio, not the absolute t/s, is the transferable part. Gate: below ~50% acceptance, regular quants run faster. Source: `state/evals/2026-09-25/gain-research.md` (Note 3), `runbooks/llama-swap.md` (bench gate >= 0.4).

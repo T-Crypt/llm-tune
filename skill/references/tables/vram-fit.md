@@ -2,7 +2,7 @@
 
 Hardware: single 24 GB class RTX card (24,564 MiB as measured), 64 GB class host RAM. All figures as recorded in the sources; nothing rounded.
 
-## Table 1 — quant file sizes and estimated peak at 131k ctx (24 GB budget, q8_0 KV, `--parallel 1`, mmproj loaded)
+## Table 1: quant file sizes and estimated peak at 131k ctx (24 GB budget, q8_0 KV, `--parallel 1`, mmproj loaded)
 
 | File | GiB | MTP delta | Est. peak | Free | Verdict |
 |---|---|---|---|---|---|
@@ -24,14 +24,14 @@ Hardware: single 24 GB class RTX card (24,564 MiB as measured), 64 GB class host
 | LOW-MTP-Q6_K | 20.89 | | 28.86 | -4.86 | over |
 | Q6_K | 21.97 | | 29.94 | -5.94 | over |
 | MTP-Q6_K | 22.38 | +0.42 | 30.35 | -6.35 | over |
-| Q8_0 | 27.74 | | 35.71 | — | file alone exceeds the card |
-| MTP-Q8_0 | 28.16 | +0.42 | 36.13 | — | file alone exceeds the card |
+| Q8_0 | 27.74 | | 35.71 |, | file alone exceeds the card |
+| MTP-Q8_0 | 28.16 | +0.42 | 36.13 |, | file alone exceeds the card |
 
 Estimated peak = file GiB + 7.97 GiB fixed (see kv-cache.md Table 2). The MTP delta is flat across every quant.
 
 Source: `state/evals/2026-09-25/gain-research.md` (Note 1b, 1e).
 
-## Table 2 — measured peak VRAM, 262k ctx sweep, one 24 GB card, desktop on iGPU
+## Table 2: measured peak VRAM, 262k ctx sweep, one 24 GB card, desktop on iGPU
 
 | Model | ctx | -ub | Peak VRAM (MiB) | Host RAM peak (MiB) | Status |
 |---|---|---|---|---|---|
@@ -52,7 +52,7 @@ Source: `state/evals/2026-09-25/gain-research.md` (Note 1b, 1e).
 
 Source: `state/evals/2026-09-26/r6-vram/results.jsonl` (peak VRAM); host RAM peak from `state/evals/2026-09-26/r6-vram/r6.log`.
 
-## Table 3 — context ladder on one 27B quant pair (measured peak VRAM)
+## Table 3: context ladder on one 27B quant pair (measured peak VRAM)
 
 | Entry | Quant | ctx | -ub | Peak VRAM (MiB) | Status |
 |---|---|---|---|---|---|
@@ -71,7 +71,7 @@ Source: `state/evals/2026-09-26/r6-vram/results.jsonl` (peak VRAM); host RAM pea
 
 Source: `state/evals/2026-09-30/r9-27b-context/results.jsonl`.
 
-## Table 4 — engine memory footprint, same model class, three engines
+## Table 4: engine memory footprint, same model class, three engines
 
 | Engine / mode | Peak VRAM (MiB) | Host RAM peak (MiB) | Load (s) |
 |---|---|---|---|
@@ -84,7 +84,7 @@ Source: `state/evals/2026-09-30/r9-27b-context/results.jsonl`.
 
 Source: `state/evals/2026-10-02/r11-strata-iq2xs/results.jsonl`, `state/evals/2026-10-02/r12-ninfer/results.jsonl`, `state/evals/2026-10-03/r13-ninfer-int8/results.jsonl`.
 
-## Table 5 — Strata expert-cache / RAM headroom by variant (24 GB card, 31 GB class RAM box)
+## Table 5: Strata expert-cache / RAM headroom by variant (24 GB card, 31 GB class RAM box)
 
 | Variant | GPU expert slots | Pinned experts (GiB) | Min RAM avail (GiB) |
 |---|---|---|---|
@@ -99,7 +99,7 @@ Source: `state/evals/2026-10-02/r11-strata-iq2xs/results.jsonl`, `state/evals/20
 
 Source: `state/evals/2026-10-03/strata-ctx/RESULTS.md`, `state/evals/2026-10-03/strata-k8v4/sweep.jsonl`.
 
-## Table 6 — CPU offload, measured (llama.cpp, 24 GB card, Windows box)
+## Table 6: CPU offload, measured (llama.cpp, 24 GB card, Windows box)
 
 | Entry | Offload setting | Decode t/s | Note |
 |---|---|---|---|
@@ -108,12 +108,11 @@ Source: `state/evals/2026-10-03/strata-ctx/RESULTS.md`, `state/evals/2026-10-03/
 
 Guidance recorded with the measurement: `--n-cpu-moe` is the only correct overflow lever, never
 `-ngl`; offloading the draft layer trades the MTP win away entirely. The idea that a partial
-offload "costs far more t/s than the quant gains back" is the source's expectation, not a
-measured result — the measured part is the direction (more offload, less speed).
+offload "costs far more t/s than the quant gains back" is the source's expectation; the measured part is the direction (more offload, less speed).
 
 Source: `reference/LOCAL_MODELS.md` (CyberTiel measurements), `reference/llama-swap/TUNING-4090.md` (guidance).
 
-## Table 7 — host RAM headroom before and after an engine upgrade (Strata IQ2_XS, 512k, 31 GB class RAM box, engine-specific)
+## Table 7: host RAM headroom before and after an engine upgrade (Strata IQ2_XS, 512k, 31 GB class RAM box, engine-specific)
 
 | Arm | Page-locked RAM pinned (GiB) | Min MemAvailable at 477K prompt (GiB) | zram peak (GiB) | 477K read t/s | Decode t/s at depth |
 |---|---|---|---|---|---|
@@ -123,7 +122,7 @@ Source: `reference/LOCAL_MODELS.md` (CyberTiel measurements), `reference/llama-s
 
 The upgrade added a page-locked RAM copy for the prompt path's lent slots, sized to all but
 `STRATA_RESIDENT_HEADROOM_GIB` (default 4) of the RAM free at start. VRAM was unchanged (12,702
-expert slots, 17.02 GiB, ~385 MiB free). Arms were not interleaved — same box, same config.
+expert slots, 17.02 GiB, ~385 MiB free). Arms were not interleaved, same box, same config.
 Headroom 6 restores 3.53 GiB and keeps most of the long-prompt gain (-12% read at 477K vs the
 default, +10% decode at depth). Recall held at all four depths on every arm.
 

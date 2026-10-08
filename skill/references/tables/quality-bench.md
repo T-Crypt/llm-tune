@@ -2,7 +2,7 @@
 
 Harnesses: blind answer ranking (5 axes x 1-10), planted-bug code review (8-bug round 1, 12-bug round 2+), structural build scoring, program-verifier task suites, DeepSWE. Hardware: single 24 GB class RTX card.
 
-## Table 1 — blind ranking, round 1 (30-day homelab question, 5 axes, /50)
+## Table 1: blind ranking, round 1 (30-day ops question, 5 axes, /50)
 
 Key: A = Nemotron-Cascade-2-Reasoning, B = Qwen3.6-Stock, C = Qwen3.8-27B-Q4-Quality, D = Qwen3.8-GAIN-V1.1-IQ3_M, E = Qwen3.8-Whittle-MoE.
 
@@ -16,7 +16,7 @@ Key: A = Nemotron-Cascade-2-Reasoning, B = Qwen3.6-Stock, C = Qwen3.8-27B-Q4-Qua
 
 Source: `state/evals/2026-09-25/think-ranking.md`.
 
-## Table 2 — blind ranking, round 2 re-rank (adds F = Qwen3.8-27B-Research, temp 1.0, 16K budget, 280 s)
+## Table 2: blind ranking, round 2 re-rank (adds F = Qwen3.8-27B-Research, temp 1.0, 16K budget, 280 s)
 
 | Answer | Specificity | Correctness / no invented facts | Actionability | Prioritisation | Concision | Total /50 |
 |---|---|---|---|---|---|---|
@@ -31,7 +31,7 @@ Judge noise note in source: C and D swapped between the two runs (41/40 then 38/
 
 Source: `state/evals/2026-09-25/think-ranking.md`.
 
-## Table 3 — think-task times, round 2 group D (same models, single answer)
+## Table 3: think-task times, round 2 group D (same models, single answer)
 
 | Model | Seconds | Answer chars | Reasoning chars | Tokens |
 |---|---|---|---|---|
@@ -43,7 +43,7 @@ Source: `state/evals/2026-09-25/think-ranking.md`.
 
 Source: `state/evals/2026-09-25/r2.log` (group D).
 
-## Table 4 — planted-bug review, round 1 (8 bugs, 8192 cap) + structural build score
+## Table 4: planted-bug review, round 1 (8 bugs, 8192 cap) + structural build score
 
 | Model | Review /8 | Review s | CSS rules | CSS props |
 |---|---|---|---|---|
@@ -84,7 +84,7 @@ Source: `state/evals/2026-09-25/r2.log` (group D).
 
 Source: `state/evals/2026-09-25/full.log`.
 
-## Table 5 — planted-bug review, round 2 (12 bugs) + structural build score
+## Table 5: planted-bug review, round 2 (12 bugs) + structural build score
 
 | Model | Review /12 | Review s | CSS rules | CSS props |
 |---|---|---|---|---|
@@ -108,7 +108,7 @@ Source: `state/evals/2026-09-25/full.log`.
 
 Source: `state/evals/2026-09-25/r2.log`.
 
-## Table 6 — planted-bug review, r6 (12 bugs, 262k/131k entries) + structural build score
+## Table 6: planted-bug review, r6 (12 bugs, 262k/131k entries) + structural build score
 
 | Model | Review /12 | CSS rules | CSS props |
 |---|---|---|---|
@@ -129,7 +129,7 @@ Source: `state/evals/2026-09-25/r2.log`.
 
 Source: `state/evals/2026-09-26/r6-vram/results.jsonl` (and `r6.log` for the 2/12 and 8/12 FAIL flags).
 
-## Table 7 — repeat runs, r7 fleet-tidy (same model, three runs, 12-bug review)
+## Table 7: repeat runs, r7 fleet-tidy (same model, three runs, 12-bug review)
 
 | Model | Run 1 | Run 2 | Run 3 |
 |---|---|---|---|
@@ -139,7 +139,7 @@ Source: `state/evals/2026-09-26/r6-vram/results.jsonl` (and `r6.log` for the 2/1
 
 Source: `state/evals/2026-09-26/r7-longctx/results.jsonl` (fleet-tidy rows).
 
-## Table 8 — r8 rebench (12-bug review) + structural
+## Table 8: r8 rebench (12-bug review) + structural
 
 | Model | Review /12 | CSS rules | CSS props |
 |---|---|---|---|
@@ -150,7 +150,7 @@ Source: `state/evals/2026-09-26/r7-longctx/results.jsonl` (fleet-tidy rows).
 
 Source: `state/evals/2026-09-30/r8-rebench/results.jsonl`.
 
-## Table 9 — r10 27B quality (12-bug review) + structural
+## Table 9: r10 27B quality (12-bug review) + structural
 
 | Model | Review /12 | CSS rules | CSS props |
 |---|---|---|---|
@@ -162,7 +162,7 @@ Source: `state/evals/2026-09-30/r8-rebench/results.jsonl`.
 
 Source: `state/evals/2026-09-30/r10-27b-decode/results.jsonl`.
 
-## Table 10 — Strata IQ2_XS, reasoning budget held vs removed (same model, same harness)
+## Table 10: Strata IQ2_XS, reasoning budget held vs removed (same model, same harness)
 
 | Run | Review /12 | Finish | Completion tokens |
 |---|---|---|---|
@@ -171,7 +171,7 @@ Source: `state/evals/2026-09-30/r10-27b-decode/results.jsonl`.
 
 Source: `state/evals/2026-10-02/r11-strata-iq2xs/run.log`, `run.nobudget.log`.
 
-## Table 11 — NInfer 27B, int8 vs a16 prefill mode (12-bug review)
+## Table 11: NInfer 27B, int8 vs a16 prefill mode (12-bug review)
 
 | Arm | Single run | Repeat runs (5) |
 |---|---|---|
@@ -180,7 +180,7 @@ Source: `state/evals/2026-10-02/r11-strata-iq2xs/run.log`, `run.nobudget.log`.
 
 Source: `state/evals/2026-10-03/r13-ninfer-int8/results.jsonl`, `review-repeat.log`.
 
-## Table 12 — NInfer vs llama.cpp control, same harness (r12)
+## Table 12: NInfer vs llama.cpp control, same harness (r12)
 
 | Model | Review /12 | CSS rules | CSS props |
 |---|---|---|---|
@@ -189,7 +189,7 @@ Source: `state/evals/2026-10-03/r13-ninfer-int8/results.jsonl`, `review-repeat.l
 
 Source: `state/evals/2026-10-02/r12-ninfer/results.jsonl`.
 
-## Table 13 — DeepSWE, fixed 6-task subset seed 0 (Qwen3.8-27B-Q4-Quality)
+## Table 13: DeepSWE, fixed 6-task subset seed 0 (Qwen3.8-27B-Q4-Quality)
 
 | Run | Status | Passed | Binary | f2p | p2p | Partial |
 |---|---|---|---|---|---|---|
@@ -201,7 +201,7 @@ Source: `state/evals/2026-10-02/r12-ninfer/results.jsonl`.
 
 Source: `state/evals/2026-09-30/swe-iq4-196k/results.jsonl`.
 
-## Table 14 — program-verifier role suite, 2026-09-25 (17 tasks x 2 attempts per role)
+## Table 14: program-verifier role suite, 2026-09-25 (17 tasks x 2 attempts per role)
 
 | Role | Pass /34 | Failures |
 |---|---|---|
@@ -214,7 +214,7 @@ Overall 132/136, mean_seconds 3.2. Categories: lookup, tool-call, config-edit, b
 
 Source: role-suite results JSON at the `state/evals/` root, dated 2026-09-25 (the filename contains a machine name, omitted here for privacy).
 
-## Table 15 — earlier single-turn suite (2026-09-23, 12 tasks x 2), as recorded in the deployed config header
+## Table 15: earlier single-turn suite (2026-09-23, 12 tasks x 2), as recorded in the deployed config header
 
 | Model | Pass /24 |
 |---|---|
@@ -225,6 +225,6 @@ Source: role-suite results JSON at the `state/evals/` root, dated 2026-09-25 (th
 | APEX-Compact | 22/24 |
 | Nemotron-Lightning | 16/24 |
 
-The same models failed a real multi-turn build (see Table 4: Coder-Pruned 0/8; GAIN hit the length cap with no build; Mini skipped the tool call) — the suite could not see it.
+The same models failed a real multi-turn build (see Table 4: Coder-Pruned 0/8; GAIN hit the length cap with no build; Mini skipped the tool call), the suite could not see it.
 
 Source: `reference/llama-swap/config.yaml` (header comment, 2026-09-23).

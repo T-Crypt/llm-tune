@@ -1,10 +1,10 @@
 # Quick bench (llama.cpp)
 
 Copy-paste, single-user, one model resident. Adjust paths and the port. Everything marked
-"(untested here)" has not been run in this repo — confirm flag names with `--help` on the
+"(untested here)" has not been run in this repo, confirm flag names with `--help` on the
 user's build before trusting them.
 
-## 1. Memory accounting — read the engine, not the arithmetic
+## 1. Memory accounting: read the engine, not the arithmetic
 
 Start the server once and keep its log. The lines that matter:
 
@@ -33,7 +33,7 @@ nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv
 free -m
 ```
 
-Any PID on the card that is not the model server is a bug — check before blaming the model.
+Any PID on the card that is not the model server is a bug; check before blaming the model.
 Record peak, not the value at load. A model that loads fine can OOM mid-inference.
 
 ## 3. Prefill and decode at depth
@@ -46,39 +46,34 @@ llama-bench -m /path/to/model.gguf -ngl 99 -fa 1 -ctk q8_0 -ctv q8_0 \
 
 Read prefill t/s as a function of depth, and decode t/s at depth. On the measured card,
 prefill fell roughly 2,500 -> 2,000 -> 1,500 t/s across 32k/120k/240k on a dense 27B; that
-shape (falling with depth) is the transferable part, the values are not.
+shape (falling with depth) is the transferable part; the values are not.
 
-## 4. Needle at depth — recall, not just window
+## 4. Needle at depth: recall beyond the declared window
 
 ```bash
 python3 needle.py --url http://127.0.0.1:8080/v1/chat/completions --model local \
   --depths 0.10,0.50,0.90 --lines 6000 --fact "build 751866"
 ```
 
-(needle.py is untested here — it has not been run in this repo.)
+(needle.py is untested here; it has not been run in this repo.)
 
 Read: `recall: yes` at every depth, or the window is not usable. An error at a depth means the
-prompt exceeded the served window — that is a harness bug, not a model failure. Run the same
+prompt exceeded the served window: that is a harness bug, not a model failure. Run the same
 depths twice; recall is stable but scores are not.
 
 ## 5. Quality probe with repeats
 
 Plant 12 known defects in a small file (mutable default, swallowed exception, wrong operator
-precedence, path join, timezone compare, unclosed resource, etc.), ask the model to review it
-with a tool call, and score found/12. Run it five times per arm.
+precedence, path join, timezone compare, unclosed resource, and similar), ask the model to
+review it with a tool call, and score found/12. Run it five times per arm.
 
 ```bash
 python3 quality_probe.py --url http://127.0.0.1:8080/v1/chat/completions --model local --runs 5
 ```
 
-(quality_probe.py is untested here — it has not been run in this repo. Its graders check the
-answer text; the planted-bug review below is the stronger form when you can score against a
-known defect list.)
-
-The lab form of the same idea: plant 12 known defects in a small file (mutable default,
-swallowed exception, wrong operator precedence, path join, timezone compare, unclosed
-resource), ask the model to review it with a tool call, and score found/12 — five runs per
-arm, so the noise is visible.
+(quality_probe.py is untested here; it has not been run in this repo. Its graders check the
+answer text; the planted-bug review in step 5 is the stronger form when you can score against
+a known defect list.)
 
 Read: the spread, not the best run. ±1–2 bugs on a 12-bug test is normal noise; a single run
 is not a result. Compare arms only with alternating runs (A, B, A, B), same prompt, one change.
@@ -88,7 +83,7 @@ is not a result. Compare arms only with alternating runs (A, B, A, B), same prom
 Send a prompt whose answer must be a tool call, and check `finish_reason` is `tool_calls` and
 the first call has the right arguments. Then re-run with tolerant parsing if the engine has it.
 On the measured engine, strict parsing failed 5/16 and tolerant parsing 0/16 on the same model
-and tasks — the parser, not the model, was the variable. Thinking-off on Qwen-class models made
+and tasks, the parser, not the model, was the variable. Thinking-off on Qwen-class models made
 them answer in prose and skip the call entirely.
 
 ## 7. What counts as evidence

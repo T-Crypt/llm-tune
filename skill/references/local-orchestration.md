@@ -1,7 +1,7 @@
-# LOCAL.md — the local model's command frontier
+# LOCAL.md: the local model's command frontier
 
 Optional additional setup for users running local models alongside cloud models in a
-multi-harness environment. This is **not** a required skill step — it is an available
+multi-harness environment. This is **not** a required skill step, it is an available
 function, like the `nexus-sub` agent pattern in OpenCode. The operator chooses whether
 to adopt it.
 
@@ -9,7 +9,7 @@ to adopt it.
 card running llama.cpp b11115 / llama-swap v257 plus Strata and NInfer measurements. The
 LOCAL.md pattern is documented from the operator's tested recipes at `https://ai.ttindall.com/recipes/`
 and from the architecture of the loopback router described in those recipes. No measurements
-here — this is a setup pattern, not tuning data. Verify on your own hardware.
+here, this is a setup pattern, not tuning data. Verify on your own hardware.
 
 ---
 
@@ -52,7 +52,7 @@ Both forms produce the same output: a `LOCAL.md` sized for local-model context w
 
 | Input size | Action | Output |
 |---|---|---|
-| AGENTS.md ≤ 4096 tokens | Too small for a local model — lacks guidance. Flag it. LOCAL.md should EXPAND guidance to reach ~4096, not trim further. | LOCAL.md = AGENTS.md + recommended expansions |
+| AGENTS.md ≤ 4096 tokens | Too small for a local model, lacks guidance. Flag it. LOCAL.md should EXPAND guidance to reach ~4096, not trim further. | LOCAL.md = AGENTS.md + recommended expansions |
 | AGENTS.md 4K–8K tokens | In the sweet spot. Chunk to ≤4096 by removing cloud-model-specific sections. | LOCAL.md = essential subset |
 | AGENTS.md 8K–16K tokens | Chunk aggressively to ≤4096. Prioritize: safety, tool guidance, model-specific notes. | LOCAL.md = essential subset (flag what was lost) |
 | AGENTS.md 16K+ tokens | Chunk hard to ≤4096. Flag all removed sections in a `## What was trimmed` section at the bottom of LOCAL.md so the operator knows what's missing. | LOCAL.md = essential subset + trim log |
@@ -61,12 +61,12 @@ Both forms produce the same output: a `LOCAL.md` sized for local-model context w
 
 Priority order for what to keep (highest to lowest):
 
-1. **Safety and validation protocols** — validate-with-operator rules, model deletion safety, privacy gates
-2. **Tool guidance for local models** — which tools local models should use, tool-call reliability tips, debloated tool set (5-7 tools, no MCP)
-3. **Model-specific notes** — quant-fit guidance, context window limits, reasoning budget caps per role
-4. **Harness routing** — which harness runs local models, how it connects to the local model endpoint
-5. **Essential project structure** — only the paths and files a local model needs to know about
-6. **Quality criteria** — how to verify the local model's work (the non-negotiable checks)
+1. **Safety and validation protocols**, validate-with-operator rules, model deletion safety, privacy gates
+2. **Tool guidance for local models**, which tools local models should use, tool-call reliability tips, debloated tool set (5-7 tools, no MCP)
+3. **Model-specific notes**, quant-fit guidance, context window limits, reasoning budget caps per role
+4. **Harness routing**, which harness runs local models, how it connects to the local model endpoint
+5. **Essential project structure**, only the paths and files a local model needs to know about
+6. **Quality criteria**, how to verify the local model's work (the non-negotiable checks)
 
 ### What LOCAL.md should NOT contain
 
@@ -80,13 +80,13 @@ Priority order for what to keep (highest to lowest):
 When chunking reduces LOCAL.md significantly, append a section listing what was removed:
 
 ```markdown
-## What was trimmed from AGENTS.md (not lost — AGENTS.md remains intact)
+## What was trimmed from AGENTS.md (not lost: AGENTS.md remains intact)
 
 - [Section name]: Removed because [reason]. Find it in AGENTS.md Section X.
 - [Section name]: Removed because [reason]. Find it in AGENTS.md Section Y.
 ```
 
-This guarantees nothing is lost — the operator can always find the full version in AGENTS.md.
+This guarantees nothing is lost, the operator can always find the full version in AGENTS.md.
 
 ---
 
@@ -118,7 +118,7 @@ Claude Code  →  Anthropic API  →  cloud model (uses AGENTS.md / CLAUDE.md no
 ### The kill switch
 
 Unset `ANTHROPIC_BASE_URL` (or equivalent) → Claude Code falls back to the Anthropic API directly,
-local subagents error out. This is the safety mechanism — local model routing is opt-in, not forced.
+local subagents error out. This is the safety mechanism, local model routing is opt-in, not forced.
 
 ---
 
@@ -156,14 +156,14 @@ that affect what a local model needs to know.
 **Concern**: Two files to maintain creates staleness risk.
 **Mitigation**: LOCAL.md is explicitly a SUBSET of AGENTS.md. It should never contain anything
 AGENTS.md doesn't also contain. If it does, the operator is maintaining two conflicting command
-frontiers — that's a user error, not a design flaw. The trim log provides the safety net.
+frontiers, that's a user error, not a design flaw. The trim log provides the safety net.
 
 **Concern**: The loopback router adds complexity.
 **Mitigation**: The router is already tested and documented (two tested recipes on the site).
-LOCAL.md doesn't add complexity to the router — it just changes what the router serves for local roles.
+LOCAL.md doesn't add complexity to the router, it just changes what the router serves for local roles.
 
 **Concern**: Local models can't follow complex guidance anyway, so a smaller file doesn't help.
-**Mitigation**: Partially true — but the issue isn't comprehension, it's context exhaustion.
+**Mitigation**: Partially true, but the issue isn't comprehension, it's context exhaustion.
 A local model that runs out of context mid-task fails regardless of guidance quality. LOCAL.md
 keeps the guidance within the budget that actually fits.
 
@@ -171,15 +171,15 @@ keeps the guidance within the budget that actually fits.
 
 ## Relationship to the rest of the skill
 
-- **SKILL.md Step 9** — LOCAL.md is the local model's harness configuration; Step 9 covers
+- **SKILL.md Step 9**: LOCAL.md is the local model's harness configuration; Step 9 covers
   harness setup generally
-- **`references/debloat.md`** — LOCAL.md is the debloated command file for local models;
+- **`references/debloat.md`**, LOCAL.md is the debloated command file for local models;
   debloat principles apply (minimal tools, no MCP, low context)
-- **`references/harnesses.md`** — LOCAL.md is configured per-harness; the harness-specific
+- **`references/harnesses.md`**, LOCAL.md is configured per-harness; the harness-specific
   tuning in that file determines which harnesses run local models
-- **`references/engine-backends.md`** — LOCAL.md doesn't affect engine fit arithmetic;
+- **`references/engine-backends.md`**, LOCAL.md doesn't affect engine fit arithmetic;
   it's a context-level routing decision
-- **Website recipes** — the loopback router recipe and role-based recipes at
+- **Website recipes**: the loopback router recipe and role-based recipes at
   `ai.ttindall.com/recipes/` are the tested implementations this pattern draws from
 
 ---

@@ -1,13 +1,13 @@
-# CITED.md — every source used in llm-tune, verified
+# CITED.md: every source used in llm-tune, verified
 
-Every external source cited in this repo. No estimates — each entry is a live URL
+Every external source cited in this repo. No estimates, each entry is a live URL
 verified as reachable (2026-10-08), with what was extracted, which file uses it,
 and the source's own publication date where known.
 
 **Convention:**
-- `Verified live` — URL returned content successfully at time of verification
-- `Sourced` — data was extracted from this source and used in a reference file
-- `Referenced` — URL is linked for the user to verify on their own hardware
+- `Verified live`, URL returned content successfully at time of verification
+- `Sourced`, data was extracted from this source and used in a reference file
+- `Referenced`, URL is linked for the user to verify on their own hardware
 
 **Tier mapping:** Tier numbers correspond to `references/hardware-tiers.md`.
 
@@ -15,7 +15,7 @@ and the source's own publication date where known.
 
 ## Hardware tiers
 
-### 1. Intel Arc B580 — Best Intel Arc GPU for Local LLMs (2026)
+### 1. Intel Arc B580: Best Intel Arc GPU for Local LLMs (2026)
 | Field | Value |
 |---|---|
 | Source | PromptQuorum |
@@ -51,7 +51,7 @@ and the source's own publication date where known.
 | Tag | DATA (community benchmark) |
 | Cited in | `data/INVENTORY.md` |
 
-### 4. Best Intel Arc GPU for Local LLMs 2026 — B580 confirmation
+### 4. Best Intel Arc GPU for Local LLMs 2026: B580 confirmation
 | Field | Value |
 |---|---|
 | Source | PromptQuorum |
@@ -72,7 +72,7 @@ and the source's own publication date where known.
 | Status | Verified live 2026-10-08 |
 | What was extracted | 128 GB unified LPDDR5X-8000, 96 GB GPU-allocatable, 256 GB/s bandwidth, BIOS allocation to 96 GB, ROCm setup for gfx1151, vLLM-ROCm, 70B Q4/Q8 fits, ~$1,999 launch |
 | Used in | `references/hardware-tiers.md` (Tier 5 Strix Halo), `references/intel-amd-unified.md` (Strix section), `references/llama-fit-broadening.md` (HIP/ROCm verification) |
-| Tag | DATA (comprehensive hardware guide) |
+| Tag | DATA (multi-topic hardware guide) |
 | Cited in | `skill/SKILL.md` (Step 9), `data/INVENTORY.md` |
 
 ### 6. A buyer's guide to local LLM hardware after running a Strix Halo (Reddit)
@@ -120,10 +120,10 @@ and the source's own publication date where known.
 | Status | Verified live 2026-10-08 |
 | What was extracted | 75% rule (macOS reserves ~25%), bandwidth ladder (M4→M5→M6), per-tier model fit, Mac mini M6 through M5 Ultra, what to buy by budget |
 | Used in | `references/hardware-tiers.md` (Apple Silicon tiers), `references/mlx-mac-tuning.md` (75% rule, bandwidth ladder, per-tier fits), `data/INVENTORY.md` |
-| Tag | DATA (comprehensive Mac guide) |
+| Tag | DATA (multi-topic Mac guide) |
 | Cited in | `skill/SKILL.md` (Step 9), `references/apple-mlx.md` (extended pointer) |
 
-### 10. State of Open-Source Local LLMs — August 2026
+### 10. State of Open-Source Local LLMs: August 2026
 | Field | Value |
 |---|---|
 | Source | llmcheck.net |
@@ -159,7 +159,7 @@ and the source's own publication date where known.
 | Tag | DATA |
 | Cited in | `data/INVENTORY.md` |
 
-### 13. M6 Mac mini for Local AI — Dual Neural Engine (2026)
+### 13. M6 Mac mini for Local AI: Dual Neural Engine (2026)
 | Field | Value |
 |---|---|
 | Source | explainx.ai |
@@ -195,7 +195,7 @@ and the source's own publication date where known.
 | Tag | DATA |
 | Cited in | `data/INVENTORY.md` |
 
-### 16. Mac Studio LLM Guide — M2 Ultra (ModelFit)
+### 16. Mac Studio LLM Guide: M2 Ultra (ModelFit)
 | Field | Value |
 |---|---|
 | Source | ModelFit |
@@ -459,14 +459,14 @@ and the source's own publication date where known.
 | Tag | DATA |
 | Cited in | `data/INVENTORY.md` |
 
-### 38. Infralovers — 4 harnesses benchmark (July 2026)
+### 38. Infralovers: 4 harnesses benchmark (July 2026)
 | Field | Value |
 |---|---|
 | Source | Infralovers |
 | URL | https://www.infralovers.com/blog/2026-07-14-local-model-ai-coding-tools-benchmark/ |
 | Date | 2026-07-14 |
 | Status | Verified live 2026-10-08 |
-| What was extracted | Same model (Qwen3.6-35B-A3B) across Pi, OpenCode, GitHub Copilot, Claude Code on local M1 Max: Pi compacts ~28k context, rejects malformed write calls (strict schema); OpenCode needs nudges; Copilot most reliable tool-calling but 60% of 32k context goes to tool definitions; Claude Code most autonomous (self-debugged fix, 24/24 tests) but slowest (~40 min, 11+ in planning — other harnesses not timed, comparison is directional, not precise). Key finding: "friction and autonomy don't move together" (author's paraphrase of the finding that leanest tools need most hand-holding while most structured harness produces most autonomous results, at real-time cost) |
+| What was extracted | Same model (Qwen3.6-35B-A3B) across Pi, OpenCode, GitHub Copilot, Claude Code on local M1 Max: Pi compacts ~28k context, rejects malformed write calls (strict schema); OpenCode needs nudges; Copilot most reliable tool-calling but 60% of 32k context goes to tool definitions; Claude Code most autonomous (self-debugged fix, 24/24 tests) but slowest (~40 min, 11+ in planning, other harnesses not timed, comparison is directional, not precise). Key finding: "friction and autonomy don't move together" (author's paraphrase of the finding that leanest tools need most hand-holding while most structured harness produces most autonomous results, at real-time cost) |
 | Used in | `references/harnesses.md` (all harness profiles), `skill/SKILL.md` (Step 8, harness-specific tuning), `data/INVENTORY.md` |
 | Tag | DATA (harness comparison benchmark) |
 | Cited in | `skill/SKILL.md` (Step 8), `data/INVENTORY.md` |
@@ -555,7 +555,7 @@ and the source's own publication date where known.
 | Tag | DATA |
 | Cited in | `data/INVENTORY.md` |
 
-### 46. MLX docs — wired limit (`iogpu.wired_limit_mb`)
+### 46. MLX docs: wired limit (`iogpu.wired_limit_mb`)
 | Field | Value |
 |---|---|
 | Source | MLX Explore |
@@ -649,7 +649,7 @@ When adding new sources:
 | DATA (API documentation) | Software API reference |
 | DATA (official specs) | Manufacturer hardware specifications |
 | DATA (hardware specs) | Hardware specifications from a review or guide |
-| DATA (comprehensive guide) | Multi-topic guide covering a hardware class |
+| DATA (multi-topic guide) | Multi-topic guide covering a hardware class |
 | DATA (backend documentation) | Backend engine documentation |
 
 ---
@@ -662,7 +662,7 @@ When adding new sources:
 | `references/engine-backends.md` | #2, #26, #27, #28, #31, #33 | 6 |
 | `references/harnesses.md` | #38 | 1 |
 | `references/debloat.md` | #34, #35 | 2 |
-| `references/safety.md` | (internal — AGENTS.md rules) | 0 external |
+| `references/safety.md` | (internal, AGENTS.md rules) | 0 external |
 | `references/llama-fit-broadening.md` | #1, #2, #3, #7, #22, #23, #24, #25, #26 | 9 |
 | `references/user-journeys.md` | (references other repo files) | 0 external |
 | `references/model-management.md` | #36, #37 | 2 |
