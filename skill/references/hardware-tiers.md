@@ -109,7 +109,7 @@ For any hardware class: **(1) how much memory the model can address** and **(2) 
 
 | Property | Value |
 |---|---|
-| Total unified memory | 128 GB LPDDR5X-8533 |
+| Total unified memory | 128 GB LPDDR5X-8000 |
 | GPU-allocatable | 96 GB |
 | Bandwidth | 256 GB/s |
 | What fits | 70B Q4 (~40 GB) with long context, 70B Q8 (~75 GB) |

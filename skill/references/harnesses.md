@@ -2,13 +2,13 @@
 
 Tuning advice differs by harness. This is not optional — the same model settings produce different results in different harnesses because each harness processes tool calls, manages context, and handles errors differently.
 
-**Source:** [Infralovers 2026-07-14](https://www.infralovers.com/blog/2026-07-14-local-model-ai-coding-tools-benchmark/) — verified, same model across 4 harnesses (Pi, OpenCode, Claude Code, Copilot). Key finding: "friction and autonomy don't move together."
+**Source:** [Infralovers 2026-07-14](https://www.infralovers.com/blog/2026-07-14-local-model-ai-coding-tools-benchmark/) — verified, same model across 4 harnesses (Pi, OpenCode, Claude Code, Copilot). Key finding (author's paraphrase): the leanest tools need the most hand-holding while the most structured harness produces the most autonomous results, at real-time cost. Claude Code measured at ~40 min total with 11+ minutes in planning; precise wall-clock times for the other three harnesses were not measured (the author explicitly states this gap), so any comparison is directional.
 
 ---
 
 ## The core principle
 
-The leanest harnesses (Pi, OpenCode) need the most hand-holding on local models. The most structured harness (Claude Code) gives the most autonomous results but takes ~40 min vs ~15 min for others. **Tuning advice MUST differ by harness.**
+The leanest harnesses (Pi, OpenCode) need the most hand-holding on local models. The most structured harness (Claude Code) gives the most autonomous results but takes ~40 min on a coding task (11+ min in planning; timing of other harnesses not measured by the source, comparison is directional). **Tuning advice MUST differ by harness.**
 
 | Harness | Profile | Context handling | Tuning priority |
 |---|---|---|---|
@@ -75,7 +75,7 @@ The leanest harnesses (Pi, OpenCode) need the most hand-holding on local models.
 
 ## Claude Code (local mode) — max autonomy, pay in time
 
-**Profile:** Most autonomous local harness. Plan mode + sub-agents. The same autonomy that makes it powerful also makes it slow on local models (~40 min vs Pi ~10 min).
+**Profile:** Most autonomous local harness. Plan mode + sub-agents. The same autonomy that makes it powerful also makes it slow on local models (~40 min on a coding task — Infralovers measured Claude Code at roughly 40 minutes total, with 11+ minutes in planning before any code was written; the Infralovers author did not measure precise wall-clock times for the other three harnesses, so treat the comparison as directional, not precise).
 
 **Tuning advice:**
 - Larger context windows matter more (plan burn-in is fixed cost).
@@ -88,7 +88,7 @@ The leanest harnesses (Pi, OpenCode) need the most hand-holding on local models.
   ```
 - Same autonomy, no cloud dependency.
 
-**Context trap:** At 32k window, 60% of context budget goes to tool definitions. This is a harness tax, not a model problem — the tuning here is about reducing tool definition overhead (see `debloat.md`).
+**Context trap:** At 32k window, ~60% of context budget can go to tool definitions (Infralovers measured this for GitHub Copilot, not Claude Code — Claude Code's overhead is plan-mode time, not tool-definition tokens: 11+ minutes of the 40-minute run were planning). For context-bounded users on any harness, tool-definition overhead matters — see `debloat.md` for the compression data and per-tier tool limits.
 
 ---
 
