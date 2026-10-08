@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320" role="img" aria-label="llm-tune: quality-aware tuning for local llms">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320" role="img" aria-label="llm-tune: settings with receipts. quality-aware tuning for local llms.">
   <rect x="0" y="0" width="1280" height="320" fill="#0d1117"/>
 
   <!-- ruler ticks, bottom edge; one green tick = the needle at depth -->
@@ -28,7 +28,7 @@
 
   <!-- wordmark -->
   <text x="56" y="168" font-family="'JetBrainsMono Nerd Font Mono','JetBrains Mono','DejaVu Sans Mono',monospace" font-size="80" font-weight="700" fill="#e6edf3" letter-spacing="-2">llm-tune</text>
-  <text x="58" y="212" font-family="'JetBrainsMono Nerd Font Mono','JetBrains Mono','DejaVu Sans Mono',monospace" font-size="23" fill="#8b949e">quality-aware tuning for local llms</text>
+  <text x="58" y="212" font-family="'JetBrainsMono Nerd Font Mono','JetBrains Mono','DejaVu Sans Mono',monospace" font-size="26" fill="#8b949e">settings with receipts</text>
 
   <!-- budget bar: right block, 596px = 24.564 gib measured card -->
   <text x="628" y="84" font-family="'JetBrainsMono Nerd Font Mono','JetBrains Mono','DejaVu Sans Mono',monospace" font-size="15" fill="#8b949e">what a 24 gib card actually holds at 131k ctx</text>

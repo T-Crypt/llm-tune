@@ -3,7 +3,8 @@
 ## 2026-10-08 (release prep)
 
 - README rewritten for public release: install and use instructions, scope
-  section, updated repository layout. Banner added under `assets/`.
+  section, updated repository layout. Banner added under `assets/`, tagline
+  "settings with receipts"; README framed agent-agnostic.
 - Internal build plans and review notes moved from the repository root to
   `docs/dev/`.
 - Repo-wide typographic cleanup: em dashes removed, formulaic phrasing
