@@ -33,6 +33,7 @@ Measurement Report template, or a PR tagged `data-submission`.
 | `skill/references/apple-mlx.md` | Apple Silicon / MLX — documented from cited sources, not measured here |
 | `skill/references/hardware-tiers.md` | Every hardware class — 8 GB Intel Arc through 512 GB Mac Studio and DGX clusters (sourced, externally verified) |
 | `skill/references/engine-backends.md` | Per-backend fit arithmetic, commands, and traps (CUDA, SYCL, Vulkan, HIP/ROCm, MLX/Metal, Ollama, vLLM) |
+| `skill/references/engine-research-sm89.md` | sm_89 (RTX 4090) engine coverage — vLLM, TensorRT-LLM, FlashInfer, SGLang, NInfer, TokenSpeed: which backends run, which are Blackwell-only, open 4090 issues |
 | `skill/references/harnesses.md` | Harness-specific tuning — Pi, OMP, Claude-local, OpenCode, Claude Code (Infralovers 2026 benchmark) |
 | `skill/references/debloat.md` | Harness debloat, MCP compression (Atlassian: 17,600→500 tokens), per-tier tool limits |
 | `skill/references/safety.md` | Validate-with-operator protocol, model/file deletion safety |

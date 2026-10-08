@@ -166,6 +166,8 @@ ollama run <model>        # auto-detects backend
 
 **Memory accounting:** Different from llama.cpp — fit is about batch capacity + KV pool, not just model fit. PagedAttention manages KV in pages, continuous batching handles request scheduling.
 
+**sm_89 (RTX 4090) specifics:** `references/engine-research-sm89.md` maps which vLLM backends actually run on sm_89 (Triton/FA yes, FlashInfer GDN Blackwell-only), open 4090 correctness/OOM issues, and version churn risks. On a 4090 you get Triton/FA by default — not FlashInfer.
+
 **vLLM fit arithmetic:**
 ```
 total_memory ≈ model_weights + KV_pool (dynamic) + compute_buffers + batching_overhead

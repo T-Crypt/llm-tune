@@ -324,3 +324,49 @@ These are web sources verified live (2026-10-08) and cited in the new reference 
 
 - **MLX docs (wired limit):** https://ml-explore.github.io/mlx/build/html/python/_autosummary/mlx.core.set_wired_limit.html — TAG: DATA (API reference).
 - **headroom issue #13:** https://github.com/blaine-hiers/headroom/issues/13 — TAG: DATA (default fractions, 24 GB worked example).
+
+### CUDA engine research for sm_89 (RTX 4090)
+
+These are the 12 research dossier files at `../research/` (in the `ninfer-prep4qwen` repo), each covering a
+CUDA inference engine or model with sm_89-specific findings. All researched 2026-10-06 through 2026-10-08
+from public sources only (repos, docs, release notes, arXiv, model cards, community recipes) — no installs,
+no weight downloads, no GPU jobs. Each entry below maps to which `skill/references/` file it feeds.
+
+- **`../research/vllm.md` — vLLM 0.31.0 sm_89 specifics:** GDN Blackwell-only, open 4090 correctness/OOM issues,
+  version churn (13 days, 717 commits), FlashInfer via Triton/FA on 4090 not FlashInfer. Feeds `references/engine-research-sm89.md` (vLLM section) and `references/engine-backends.md` (vLLM subsection). TAG: DATA.
+- **`../research/tensorrt-llm.md` — TensorRT-LLM 1.3.0 sm_89 support matrix:** "Ada Lovelace (SM89) — FP32,
+  FP16, BF16, FP8, INT8, INT4". Most complete precision stack of any engine for sm_89. PyTorch sole backend
+  since 1.0. ModelOpt companion for FP8/NVFP4/INT8. Feeds `references/engine-research-sm89.md` (TensorRT-LLM
+  section). TAG: DATA.
+- **`../research/flashinfer.md` — FlashInfer 0.7.0 sm_89 kernel coverage:** Attention via FA2 yes on sm_89;
+  every GDN/Gated-DeltaNet kernel, fast FMHA, FP4/FP8-MoE, XQA decode are Hopper/Blackwell-only. Adoption
+  list: SGLang, vLLM, TensorRT-LLM, TGI, MLC-LLM, LightLLM, lorax, ScaleLLM. Feeds `references/engine-research-sm89.md`
+  (FlashInfer section) and `references/engine-backends.md` (FlashInfer subsection). TAG: DATA.
+- **`../research/sglang.md` — SGLang 0.5.21 sm_89 analysis:** CUDA 13 required (v0.5.20+), verified Qwen hybrid
+  recipes are datacenter/Blackwell, RadixAttention, Unified Radix Cache. Feeds `references/engine-research-sm89.md`
+  (SGLang section). TAG: DATA.
+- **`../research/tokenspeed.md` — TokenSpeed 0.1.1 sm_89 CI status:** MIT license, day-0 Qwen3.8/GLM 5.3 flash
+  recipes, but no CI on Ada/RTX consumer GPUs. Feeds `references/engine-research-sm89.md` (TokenSpeed section).
+  TAG: DATA (track for future Ada CI).
+- **`../research/eagle3-medusa-specforge.md` — EAGLE-3/Medusa/SpecForge drafters:** Draft-model speculative
+  decoding alternatives to MTP on sm_89. EAGLE-3 (Peking U + MS Research), Medusa (dormant), SpecForge (LMSYS).
+  Feeds `references/engine-research-sm89.md` (speculative alternatives section). TAG: DATA.
+- **`../research/dflash-pard.md` — DFlash/PARD parallel draft:** Block-diffusion drafter (DFlash, Z Lab / UC San
+  Diego) and target-independent parallel draft (PARD, AMD). Both shipped in TensorRT-LLM. ICLR 2026 for PARD.
+  Feeds `references/engine-research-sm89.md` (speculative alternatives section). TAG: DATA.
+- **`../research/ninfer-4090-udpsendtofailed.md` — NInfer 4090 community port (sm_89 native):** From-scratch
+  C++20/CUDA engine specialized to RTX 4090 (sm_89, AD102, 128 SMs) running Qwen3.8-27B. Deleted 45+ Blackwell
+  SM120/NVFP4 kernel files. Windows headline features (D3D12, DirectStorage) are Linux/Docker open issue. Feeds
+  `references/engine-research-sm89.md` (NInfer 4090 section). TAG: DATA (community report, not measured here).
+- **`../research/ninfer-windows-natpate.md` — NInfer Windows port (sm_120a, RTX 5090):** DFlash2 vs MTP
+  comparison (~42% faster decode, community report, unverified). Feeds `references/engine-research-sm89.md`
+  (NInfer Windows section) and Step 6 speculative guidance (flag as community report). TAG: DATA (unverified).
+- **`../research/ktransformers.md` — KTransformers 0.7.1 sm_89 status:** CPU-GPU heterogeneous MoE framework.
+  All Qwen support is MoE; no dense-model offload path. CPU kernels upstreamed into SGLang since Oct 2025.
+  Feeds `references/engine-research-sm89.md` (KTransformers section). TAG: DATA (MoE only).
+- **`../research/qwen38-flash-next.md` — Qwen3.8-Flash-Next architecture:** 125B MoE (6B active + 51B n-gram
+  PLE + 4B MTP). Does not fit on sm_89 at any published precision (172.78 GiB FP8, ~60 GB in 4×3090). Feeds
+  `references/engine-research-sm89.md` (Qwen3.8-Flash-Next section) and model management context. TAG: DATA.
+- **`../research/qwen-official.md` — Qwen model vendor, architecture timeline:** Next dense Qwen prediction
+  (~27-32B, GDN hybrid, MTP, 256K+, vision). Qwen3.8-Flash-Next custom license (qwen-community-1.0). Feeds
+  `references/engine-research-sm89.md` (Qwen context) and model management guidance. TAG: DATA.

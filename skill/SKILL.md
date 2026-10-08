@@ -208,7 +208,9 @@ Run the steps in order. Each step: the rule, the evidence, the trap, how to veri
   HIP/ROCm (AMD Strix/Gorgon Halo), and Vulkan backends. llama-fit-params works on all of them
   (see `references/llama-fit-broadening.md`).
 - **Engine-specific fit:** `references/engine-backends.md` — every backend's fit arithmetic,
-  commands, and traps (CUDA, SYCL, Vulkan, HIP/ROCm, MLX/Metal, Ollama, vLLM).
+  commands, and traps (CUDA, SYCL, Vulkan, HIP/ROCm, MLX/Metal, Ollama, vLLM). For sm_89 (RTX 4090)
+  engine-specifics — which backends actually run, which are Blackwell-only, open 4090 issues — see
+  `references/engine-research-sm89.md`.
 - **User journeys:** `references/user-journeys.md` — 5 entry-state workflows from "I have no
   models" to "I'm pushing the frontier."
 - **Safety:** `references/safety.md` — validate-with-operator protocol for irreversible actions
