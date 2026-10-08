@@ -165,3 +165,25 @@ Each submission is tagged:
 
 Open an issue tagged `data-submission` or `question`. If you are unsure whether
 your measurement is useful, submit it anyway - the maintainers will tell you.
+
+## Contributing LOCAL.md setups (optional)
+
+If you use the LOCAL.md chunk-md pattern — running a local model through a
+triggered command file alongside a cloud model — you can contribute your setup:
+
+1. **Document your LOCAL.md** — the chunked file you use for local model tasks,
+   sized for your model's context window. Include the `/chunk-md` output and the
+   trim log.
+2. **Document your harness routing** — which harness (Claude Code, OpenCode, Pi,
+   OMP, etc.) points local role names at LOCAL.md, and how (loopback proxy,
+   env vars, subagent definitions, etc.).
+3. **Open an issue tagged `setup-pattern`** — describe your hardware, model,
+   and routing. This is separate from `data-submission` because it is a setup
+   pattern, not a measurement.
+4. **Verified on your hardware** — like all contributions, the setup must be
+   actually running, not theoretical. State what you verified (tool-call
+   reliability, fit, routing correctness).
+
+Setup patterns help others who run the same hardware/model combination. They
+do not affect the skill's measured numbers — they affect how users configure
+their harnesses to use those numbers.

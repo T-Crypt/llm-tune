@@ -34,7 +34,19 @@ It contains only what a local model needs to function for the tasks the operator
 ## The chunk function
 
 A procedure to create `LOCAL.md` from `AGENTS.md` of any size. It is a one-time setup;
-re-run it when `AGENTS.md` changes significantly.
+re-run it when `AGENTS.md` changes significantly. Invoke it as:
+
+```
+/chunk-md AGENTS.md
+```
+
+or equivalently (same function, shorter name):
+
+```
+/local-md
+```
+
+Both forms produce the same output: a `LOCAL.md` sized for local-model context windows.
 
 ### Input → output
 
@@ -127,7 +139,7 @@ own system prompt).
 
 ## When to re-run the chunk function
 
-Re-run `/chunk-md` (or equivalent) when:
+Re-run `/chunk-md` (or `/local-md`, same function) when:
 
 - `AGENTS.md` is updated with new sections that affect local model operation
 - The local model harness changes (new tools, new harness, different endpoint)

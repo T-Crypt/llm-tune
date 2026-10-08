@@ -107,7 +107,7 @@ Synthesized from the research dossier collection at `../research/` (12 dossiers,
 - **Portable:** each release is a portable win64 zip, CUDA 13.1 runtime baseline, built on 13.3 toolchain.
 - **v3 artifact format:** model/weight decoupling (v0.8.0).
 
-**Implication for llm-tune:** The DFlash2 vs MTP comparison data (42% faster decode) is a user-reported, unverified measurement — it does not meet our quality bar for inclusion in `references/speculative-mtp.md`. Flag it as "community report, unverified" if referenced. But it demonstrates that parallel-draft speculative decoding (DFlash2) is a real alternative to MTP on consumer hardware.
+**Implication for llm-tune:** The DFlash2 vs MTP comparison data (42% faster decode) is a user-reported, unverified measurement — it does not meet our quality bar for inclusion in `references/tables/speculative-mtp.md`. Flag it as "community report, unverified" if referenced. But it demonstrates that parallel-draft speculative decoding (DFlash2) is a real alternative to MTP on consumer hardware.
 
 ---
 
