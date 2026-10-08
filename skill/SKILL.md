@@ -272,7 +272,10 @@ the user's version before recommending one.
 
 - **Hardware:** every number is from one 24 GB card class with 31 GB RAM. Never extrapolate a
   figure to another card or RAM class. Hand the user the bench (`bench/`) and read the
-  result on their box.
+  result on their box. **Contributions from other hardware classes are actively sought**
+  — `CONTRIBUTING.md` has the submission template and quality standards. The most valuable
+  data: fit/crash data from cards we don't have, recall-at-depth from other hardware,
+  Apple Silicon measurements, and multi-user serving behaviour.
 - **Multi-user / concurrent serving:** all measurements are single-request, one model resident.
   Parallel slots, batching, and cache contention are unmeasured here.
 - **Other engines — evidence is thin:** Ollama, LM Studio, vLLM, and expert-offload engines
@@ -285,7 +288,7 @@ the user's version before recommending one.
   nothing in this repo has run on an Apple Silicon machine.
 - **Long-horizon quality:** perplexity and planted-bug review are proxies; nothing here measures
   week-long agent behaviour.
-- **Local until tested:** this is v0.1, unreviewed outside the lab that produced it.
+- **Local until tested:** this is v0.2, reviewed internally (see `CONTRIBUTING.md` for how to verify on your hardware).
 
 ## Bench
 

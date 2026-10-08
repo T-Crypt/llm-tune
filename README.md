@@ -8,11 +8,20 @@ Smart-Launcher, generic hardware-heuristic skills), llm-tune is QUALITY-aware:
 it recommends settings backed by measured evidence — recall at depth, bench
 scores, agent/harness behaviour, and documented failure modes and traps.
 
-Status: **flight 5: skill v0.2** — written against the measured evidence, bench fixes from a
+Status: **flight 6 (post-flight 6): skill v0.2** — written against the measured evidence, bench fixes from a
 live run on 2026-10-05, plus an Apple Silicon / MLX section that is documented from cited
 sources and not measured here. Local until tested; nothing is released. Every measured number
 is from one machine class (24 GB card, 31 GB RAM), so the skill hands the user a bench to run
 on their own box.
+
+## Contributing
+
+The evidence base is thin on hardware diversity — every number was measured on one
+24 GB RTX 4090-class card with 31 GB RAM. **Your measurements make the tuning advice better
+for everyone.** See `CONTRIBUTING.md` for the submission template, quality standards, and
+what kinds of data are most valuable (cards we don't have, recall at depth from other hardware,
+multi-user serving, Apple Silicon measurements). You can submit via a GitHub issue using the
+Measurement Report template, or a PR tagged `data-submission`.
 
 ## Layout
 
