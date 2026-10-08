@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320" role="img" aria-label="llm-tune: quality-aware tuning for local llms">
+  <rect x="0" y="0" width="1280" height="320" fill="#0d1117"/>
+
+  <!-- ruler ticks, bottom edge; one green tick = the needle at depth -->
+  <g stroke="#21262d" stroke-width="1">
+    <line x1="32" y1="312" x2="32" y2="300"/><line x1="64" y1="312" x2="64" y2="304"/>
+    <line x1="96" y1="312" x2="96" y2="300"/><line x1="128" y1="312" x2="128" y2="304"/>
+    <line x1="160" y1="312" x2="160" y2="300"/><line x1="192" y1="312" x2="192" y2="304"/>
+    <line x1="224" y1="312" x2="224" y2="300"/><line x1="256" y1="312" x2="256" y2="304"/>
+    <line x1="288" y1="312" x2="288" y2="300"/><line x1="320" y1="312" x2="320" y2="304"/>
+    <line x1="352" y1="312" x2="352" y2="300"/><line x1="384" y1="312" x2="384" y2="304"/>
+    <line x1="416" y1="312" x2="416" y2="300"/><line x1="448" y1="312" x2="448" y2="304"/>
+    <line x1="480" y1="312" x2="480" y2="300"/><line x1="512" y1="312" x2="512" y2="304"/>
+    <line x1="544" y1="312" x2="544" y2="300"/><line x1="576" y1="312" x2="576" y2="304"/>
+    <line x1="608" y1="312" x2="608" y2="300"/><line x1="640" y1="312" x2="640" y2="304"/>
+    <line x1="672" y1="312" x2="672" y2="300"/><line x1="704" y1="312" x2="704" y2="304"/>
+    <line x1="736" y1="312" x2="736" y2="300"/><line x1="768" y1="312" x2="768" y2="304"/>
+    <line x1="800" y1="312" x2="800" y2="300"/><line x1="832" y1="312" x2="832" y2="304"/>
+    <line x1="864" y1="312" x2="864" y2="300"/><line x1="896" y1="312" x2="896" y2="304"/>
+    <line x1="928" y1="312" x2="928" y2="300"/><line x1="960" y1="312" x2="960" y2="304"/>
+    <line x1="992" y1="312" x2="992" y2="300"/><line x1="1024" y1="312" x2="1024" y2="304"/>
+    <line x1="1056" y1="312" x2="1056" y2="300"/><line x1="1088" y1="312" x2="1088" y2="304"/>
+    <line x1="1120" y1="312" x2="1120" y2="300"/><line x1="1152" y1="312" x2="1152" y2="304"/>
+    <line x1="1184" y1="312" x2="1184" y2="300"/><line x1="1216" y1="312" x2="1216" y2="304"/>
+    <line x1="1248" y1="312" x2="1248" y2="300"/>
+  </g>
+  <line x1="992" y1="312" x2="992" y2="294" stroke="#3fb950" stroke-width="2"/>
+
+  <!-- wordmark -->
+  <text x="56" y="168" font-family="'JetBrainsMono Nerd Font Mono','JetBrains Mono','DejaVu Sans Mono',monospace" font-size="80" font-weight="700" fill="#e6edf3" letter-spacing="-2">llm-tune</text>
+  <text x="58" y="212" font-family="'JetBrainsMono Nerd Font Mono','JetBrains Mono','DejaVu Sans Mono',monospace" font-size="23" fill="#8b949e">quality-aware tuning for local llms</text>
+
+  <!-- budget bar: right block, 596px = 24.564 gib measured card -->
+  <text x="628" y="84" font-family="'JetBrainsMono Nerd Font Mono','JetBrains Mono','DejaVu Sans Mono',monospace" font-size="15" fill="#8b949e">what a 24 gib card actually holds at 131k ctx</text>
+
+  <!-- bar y=100 h=54 -->
+  <rect x="628" y="100" width="327" height="54" fill="#58a6ff"/>
+  <rect x="955" y="100" width="103" height="54" fill="#3fb950"/>
+  <rect x="1058" y="100" width="69" height="54" fill="#d29922"/>
+  <rect x="1127" y="100" width="21" height="54" fill="#f778ba"/>
+  <rect x="1148" y="100" width="10" height="54" fill="#bc8cff"/>
+  <rect x="1158" y="100" width="66" height="54" fill="#161b22" stroke="#30363d" stroke-dasharray="4 3"/>
+
+  <!-- labels inside segments -->
+  <text x="640" y="123" font-family="'JetBrainsMono Nerd Font Mono','JetBrains Mono','DejaVu Sans Mono',monospace" font-size="16" font-weight="700" fill="#0d1117">model file</text>
+  <text x="640" y="144" font-family="'JetBrainsMono Nerd Font Mono','JetBrains Mono','DejaVu Sans Mono',monospace" font-size="14" fill="#0d1117">13.50</text>
+  <text x="962" y="123" font-family="'JetBrainsMono Nerd Font Mono','JetBrains Mono','DejaVu Sans Mono',monospace" font-size="16" font-weight="700" fill="#0d1117">kv</text>
+  <text x="962" y="144" font-family="'JetBrainsMono Nerd Font Mono','JetBrains Mono','DejaVu Sans Mono',monospace" font-size="14" fill="#0d1117">4.25</text>
+  <text x="1064" y="123" font-family="'JetBrainsMono Nerd Font Mono','JetBrains Mono','DejaVu Sans Mono',monospace" font-size="14" font-weight="700" fill="#0d1117">compute</text>
+  <text x="1064" y="144" font-family="'JetBrainsMono Nerd Font Mono','JetBrains Mono','DejaVu Sans Mono',monospace" font-size="12" fill="#0d1117">2.85</text>
+
+  <!-- leader labels: mmproj left of its tick, draft right of its tick, same row -->
+  <line x1="1137" y1="154" x2="1137" y2="168" stroke="#f778ba" stroke-width="1"/>
+  <line x1="1153" y1="154" x2="1153" y2="168" stroke="#bc8cff" stroke-width="1"/>
+  <text x="1147" y="186" text-anchor="end" font-family="'JetBrainsMono Nerd Font Mono','JetBrains Mono','DejaVu Sans Mono',monospace" font-size="12" fill="#f778ba">mmproj .87</text>
+  <text x="1160" y="186" text-anchor="start" font-family="'JetBrainsMono Nerd Font Mono','JetBrains Mono','DejaVu Sans Mono',monospace" font-size="12" fill="#bc8cff">draft .42</text>
+  <text x="1224" y="206" text-anchor="end" font-family="'JetBrainsMono Nerd Font Mono','JetBrains Mono','DejaVu Sans Mono',monospace" font-size="12" fill="#8b949e">headroom 2.67</text>
+
+  <!-- axis -->
+  <line x1="628" y1="224" x2="1224" y2="224" stroke="#21262d" stroke-width="1"/>
+  <text x="628" y="244" font-family="'JetBrainsMono Nerd Font Mono','JetBrains Mono','DejaVu Sans Mono',monospace" font-size="13" fill="#8b949e">0</text>
+  <text x="1224" y="244" text-anchor="end" font-family="'JetBrainsMono Nerd Font Mono','JetBrains Mono','DejaVu Sans Mono',monospace" font-size="13" fill="#8b949e">24.56 gib</text>
+
+  <!-- measured annotation -->
+  <text x="628" y="278" font-family="'JetBrainsMono Nerd Font Mono','JetBrains Mono','DejaVu Sans Mono',monospace" font-size="15" fill="#e6edf3">the file alone is not the budget</text>
+  <text x="628" y="298" font-family="'JetBrainsMono Nerd Font Mono','JetBrains Mono','DejaVu Sans Mono',monospace" font-size="13" fill="#8b949e">peak 21.89 / 24.56 gib, one measured run, rtx 4090 class</text>
+</svg>
