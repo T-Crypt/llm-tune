@@ -1,0 +1,44 @@
+{
+  "model": "agent-fast",
+  "runs": 5,
+  "max_tokens": 8192,
+  "tasks": {
+    "json-strict": {
+      "pass": 5,
+      "fail": 0,
+      "budget": 0,
+      "error": 0,
+      "max_reasoning_chars": 841
+    },
+    "bug-trace": {
+      "pass": 5,
+      "fail": 0,
+      "budget": 0,
+      "error": 0,
+      "max_reasoning_chars": 5879
+    },
+    "tool-call-shape": {
+      "pass": 5,
+      "fail": 0,
+      "budget": 0,
+      "error": 0,
+      "max_reasoning_chars": 771
+    },
+    "constrained-format": {
+      "pass": 5,
+      "fail": 0,
+      "budget": 0,
+      "error": 0,
+      "max_reasoning_chars": 2376
+    },
+    "short-needle": {
+      "pass": 5,
+      "fail": 0,
+      "budget": 0,
+      "error": 0,
+      "max_reasoning_chars": 760
+    }
+  }
+}
+BUDGET counts are settings failures, not model failures: the run hit the answer cap with nothing to show. Fix the budget before reading the pass rate.
+Report the spread, not the best run: +/-1-2 on a 5-run probe is normal noise.

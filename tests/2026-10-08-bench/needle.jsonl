@@ -1,0 +1,3 @@
+{"depth": 0.1, "prompt_lines": 6000, "prompt_tokens": 142279, "prefill_tps": 4961.0, "seconds": 28.7, "finish": "stop", "content_chars": 9, "reasoning_chars": 412, "recall": "yes", "status": "ok"}
+{"depth": 0.5, "prompt_lines": 6000, "prompt_tokens": 142278, "prefill_tps": 4832.0, "seconds": 29.4, "finish": "stop", "content_chars": 9, "reasoning_chars": 418, "recall": "yes", "status": "ok"}
+{"depth": 0.9, "prompt_lines": 6000, "prompt_tokens": 142278, "prefill_tps": 4876.4, "seconds": 29.2, "finish": "stop", "content_chars": 9, "reasoning_chars": 412, "recall": "yes", "status": "ok"}
