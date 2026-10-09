@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-10-08 (in-repo bench run, fixes, data re-verification)
+
+- First in-repo run of the bench scripts against a live server: `needle.py`
+  held recall at 10/50/90% depth (the 6000-line default is about 142k prompt
+  tokens, so it needs a 262k-context model), `quality_probe.py` passed 25/25
+  with zero BUDGET, and `mlx_quant_search.py` ran against the HF API. Commands
+  and raw output in `tests/2026-10-08-bench/`.
+- The README status line and the "(untested here)" markers rewritten from the
+  real run; the marker survives only where still true (the llama-bench prefill
+  sweep).
+- The model-management page now checks for the HF CLI before suggesting an
+  install (`command -v hf && hf --version || pip install -U huggingface_hub`).
+- All 49 unique citations re-checked live (45 return 200, 4 block bots) and
+  the vLLM serve defaults plus the llama.cpp fit-params flags verified against
+  the current docs; `vllm-local.md` updated with the verified defaults.
+
 ## 2026-10-08 (release prep)
 
 - README rewritten for public release: install and use instructions, scope

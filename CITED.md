@@ -274,7 +274,7 @@ and the source's own publication date where known.
 | URL | https://github.com/ggml-org/llama.cpp/blob/master/tools/fit-params/README.md |
 | Date | 2026 (exact date not stated; file actively maintained) |
 | Status | Verified live 2026-10-08 |
-| What was extracted | Auto-fit documentation: llama.cpp binaries can automatically fit projected memory use, controlled by flags |
+| What was extracted | Auto-fit documentation: llama.cpp binaries can automatically fit projected memory use, controlled by flags. Re-verified against the README and a current `llama-server --help` on 2026-10-08: `-fit`/`--fit`, `--fit-target`, `--fit-ctx`; current builds print one `llama_memory_breakdown_print` line (total, free, self, model, context, compute, unaccounted) instead of the old per-buffer `KV buffer size` / `compute buffer size` lines |
 | Used in | `references/llama-fit-broadening.md` (fit params tool description), `skill/SKILL.md` (Step 1 reference) |
 | Tag | DATA (tool documentation) |
 | Cited in | `data/INVENTORY.md` |
@@ -334,7 +334,7 @@ and the source's own publication date where known.
 | URL | https://docs.vllm.ai/en/stable/cli/serve/ |
 | Date | 2026 (exact date not stated; actively maintained) |
 | Status | Verified live 2026-10-08 |
-| What was extracted | vLLM serve CLI, flag reference, deployment options |
+| What was extracted | vLLM serve CLI, flag reference, deployment options. Defaults verified against the live CLI docs on 2026-10-08: `--port` 8000, `--tensor-parallel-size`/`-tp` 1, `--data-parallel-size`/`-dp` 1, `--gpu-memory-utilization`/`--device-memory-utilization` 0.92, `--max-model-len` auto-derived from the model config when unset |
 | Used in | `references/vllm-local.md` (vLLM commands) |
 | Tag | DATA (command reference) |
 | Cited in | `data/INVENTORY.md` |
@@ -622,6 +622,7 @@ and the source's own publication date where known.
 | Version | Date | What changed |
 |---|---|---|
 | 2026-10-08 | Initial | 50 source entries, all verified live on 2026-10-08 |
+| 2026-10-08 | Re-verification | Re-checked all 49 unique URLs the same day: 45 return 200 (37 direct, 8 Reddit via browser user agent), 4 block automated clients (Medium x3, Intel x1) and were confirmed live another way. Fit-params (#22) and vLLM serve (#27) entries extended with same-day verified flags and defaults |
 
 ---
 
@@ -681,3 +682,10 @@ All URLs verified live on 2026-10-08. Verification method: HTTP GET request,
 confirming response code 200 and page content matches expected topic.
 Any URL returning 4xx/5xx or redirecting to unrelated content is flagged in the
 entry as unverified and should be re-checked before citing in a published document.
+
+A second pass the same day re-checked every unique URL (49 across 50 entries).
+37 returned 200 to a direct GET; the 8 Reddit threads returned 403 to a minimal
+user agent and 200 to a browser user agent (anti-bot, not dead); Medium (x3)
+and Intel (x1) block automated clients - the Intel page loads in a browser-grade
+fetch and the Medium posts were verified in the first pass, but re-check them by
+hand before heavy reliance.

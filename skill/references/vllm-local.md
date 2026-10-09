@@ -107,7 +107,7 @@ nginx → 8000, 8001
 
 1. **`--max-model-len` ≠ client context cap.** A client cap larger than the served window overfills the server (400 or silent clipping, same trap as llama.cpp, finding 28).
 2. **KV quantization quality beyond needle recall is unmeasured.** vLLM's FP8/int8 KV is a real lever, but quality at depth is not benchmarked in this repo.
-3. **Engine defaults differ per version.** Pin vLLM versions; `--max-model-len` defaults and KV management have changed between versions.
+3. **Engine defaults differ per version.** Pin vLLM versions; `--max-model-len` defaults and KV management have changed between versions. Current stable CLI docs (verified 2026-10-08): `--port` 8000, `--tensor-parallel-size`/`-tp` 1, `--data-parallel-size`/`-dp` 1, `--gpu-memory-utilization`/`--device-memory-utilization` 0.92, `--max-model-len` auto-derived from the model config when unset.
 4. **Prefix caching changes results.** If `enable_prefix_caching` is on, A/B test results are unreliable unless you control for it.
 5. **Batching changes memory.** Unlike llama.cpp's static allocation, vLLM KV pool fluctuates with concurrent request count. Measure at your expected concurrency.
 6. **Multi-model routing adds latency.** Pattern 2 adds proxy overhead; measure end-to-end latency, not per-model throughput alone.
