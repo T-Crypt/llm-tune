@@ -1,8 +1,8 @@
-# Evidence inventory (flight 1)
+# Evidence inventory
 
 Catalogue of the source measurements behind llm-tune. Sources are the author's private measurement repo; citations use that repo's paths as provenance, and the tabulated numbers live in `skill/references/tables/`. Hardware described generically (RTX 4090 24 GB class, 31 GB RAM host, verified against the machine). Tags: **FINDING** (generalisable lesson), **DATA** (raw measurements worth tabulating), **LOCAL-ONLY** (specific to the source setup, skip).
 
-Note: the evals tree is ~18 MB, not the ~7 MB stated in the brief; large .log/.jsonl files were skimmed with head/tail/grep, not read whole.
+Note: the evals tree is ~18 MB, not the ~7 MB first stated; large .log/.jsonl files were skimmed with head/tail/grep, not read whole.
 
 ---
 

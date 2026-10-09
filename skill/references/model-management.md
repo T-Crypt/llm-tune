@@ -7,24 +7,30 @@ How to download, inventory, and safely delete models across all engines and plat
 ## The download workflow (universal)
 
 ```bash
-# 1. Install HF CLI (works on Windows/Linux/Mac)
-pip install huggingface_hub
+# 0. The HF CLI (hf) is optional but recommended for big quants: it transfers
+#    large files over xet (fast, deduped) and works on Windows/Linux/Mac.
+#    Models can be downloaded without it (browser, the HF HTTP API, ollama pull).
+#    Check whether it is already installed, install only if you want it:
+command -v hf && hf --version || pip install -U huggingface_hub
 
-# 2. For GGUF models (llama.cpp)
+# 1. For GGUF models (llama.cpp)
 hf download <org>/<model> --include "*.gguf" --local-dir ./models/<name>
 
-# 3. For safetensors (MLX, PyTorch)
+# 2. For safetensors (MLX, PyTorch)
 hf download <org>/<model> --local-dir ./models/<name>
 
-# 4. For MLX quants specifically (mlx-community org)
+# 3. For MLX quants specifically (mlx-community org)
 hf download mlx-community/Qwen3-Coder-30B-A3B-Instruct-4bit --local-dir ./models/qwen3-coder-30b
 
-# 5. List available quants for a model
+# 4. List available quants for a model
 hf api huggingface.co/api/models?author=mlx-community&search=Qwen3-Coder&limit=50
 
-# 6. Check a model's file sizes (before downloading)
+# 5. Check a model's file sizes (before downloading)
 hf api huggingface.co/api/models/<org>/<model>/tree/main | jq '.[].size'
 ```
+
+Note: `skill/bench/mlx_quant_search.py` talks to the Hugging Face HTTP API
+directly and needs no `hf` CLI installed.
 
 ---
 

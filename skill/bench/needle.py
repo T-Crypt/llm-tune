@@ -3,7 +3,9 @@
 
 Stdlib only. Written from the method recorded in references/tables/context-recall.md.
 The str.format crash below was found by a live run against a server on 2026-10-05; this
-version fixes it and adds BUDGET reporting, but has not been re-run here.
+version fixes it and adds BUDGET reporting. Re-run in this repo on 2026-10-08, recall yes at
+10/50/90% depth (records in ../tests/2026-10-08-bench/). Note: the 6000-line default is about
+142k prompt tokens, so it needs a 262k-context model.
 
 Builds a filler haystack, plants one fact at each requested depth, asks the model to
 report it, and prints one JSON line per depth: prompt size, seconds, recall, and status.
@@ -17,7 +19,7 @@ Status meanings:
             failure. Raise --max-tokens or cap the reasoning budget before blaming the model.
   error   - the prompt exceeded the served window (HTTP 400) or the request failed.
 
-Works against any OpenAI-compatible server, including mlx_lm.server (flags untested here).
+Works against any OpenAI-compatible server, including mlx_lm.server (its flags not verified here).
 """
 
 import argparse

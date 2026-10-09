@@ -1,12 +1,15 @@
 # Quick bench (llama.cpp)
 
-Copy-paste, single-user, one model resident. Adjust paths and the port. Everything marked
-"(untested here)" has not been run in this repo, confirm flag names with `--help` on the
-user's build before trusting them.
+Copy-paste, single-user, one model resident. Adjust paths and the port. The two request
+scripts (`needle.py`, `quality_probe.py`) were run in this repo on 2026-10-08 against a live
+server (records in `tests/2026-10-08-bench/`). The `llama-server` and `llama-bench` command
+lines below are generic; confirm flag names with `--help` on the user's build, they change
+between versions.
 
 ## 1. Memory accounting: read the engine, not the arithmetic
 
-Start the server once and keep its log. The lines that matter:
+Start the server once and keep its log. llama.cpp can auto-fit with `-fit on`
+(`--fit-target`, `--fit-ctx`; it prints projected vs free device memory), or fit by hand:
 
 ```bash
 llama-server -m /path/to/model.gguf --mmproj /path/to/mmproj.gguf \
@@ -17,8 +20,13 @@ llama-server -m /path/to/model.gguf --mmproj /path/to/mmproj.gguf \
 Then read:
 
 ```bash
-grep -Ei "KV buffer size|compute buffer size|model size|memory" load.log
+grep -Ei "KV buffer size|compute buffer size|model size|memory breakdown|unaccounted" load.log
 ```
+
+Older builds print per-buffer lines (`model size`, `KV buffer size`, `compute buffer size`);
+current builds print one `llama_memory_breakdown_print` table with columns total, free, self,
+model, context, compute, unaccounted (verified against the upstream fit-params README and
+`llama-server --help` on 2026-10-08). Grep for both until you know which your build prints.
 
 Record: model file size, KV buffer size, compute buffer size, mmproj, draft-head size if
 speculative decoding is on. These are the numbers the fit arithmetic should use. The
@@ -28,7 +36,7 @@ log is what turns it into a measurement.
 ## 2. Peak VRAM and host RAM during a run
 
 ```bash
-# Peak per process, sampled during the run (untested here as a loop; the query itself is standard):
+# Peak per process, sampled during the run (the loop shape was used in the 2026-10-08 in-repo run; the query is standard):
 nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv
 free -m
 ```
@@ -55,7 +63,9 @@ python3 needle.py --url http://127.0.0.1:8080/v1/chat/completions --model local 
   --depths 0.10,0.50,0.90 --lines 6000 --fact "build 751866"
 ```
 
-(needle.py is untested here; it has not been run in this repo.)
+(Ran in this repo on 2026-10-08: recall yes at 10/50/90% depth. At the default 6000 lines the
+prompt is about 142k tokens, so a 131k-context model needs a lower `--lines` or returns
+HTTP 400 at every depth.)
 
 Read: `recall: yes` at every depth, or the window is not usable. An error at a depth means the
 prompt exceeded the served window: that is a harness bug, not a model failure. Run the same
@@ -71,9 +81,10 @@ review it with a tool call, and score found/12. Run it five times per arm.
 python3 quality_probe.py --url http://127.0.0.1:8080/v1/chat/completions --model local --runs 5
 ```
 
-(quality_probe.py is untested here; it has not been run in this repo. Its graders check the
-answer text; the planted-bug review in step 5 is the stronger form when you can score against
-a known defect list.)
+(Ran in this repo on 2026-10-08: 25/25 with `--max-tokens 8192`. A role that reasons needs an
+answer cap above its reasoning budget; with an equal cap every run grades BUDGET. The graders
+check the answer text; the planted-bug review in step 5 is the stronger form when you can
+score against a known defect list.)
 
 Read: the spread, not the best run. ±1–2 bugs on a 12-bug test is normal noise; a single run
 is not a result. Compare arms only with alternating runs (A, B, A, B), same prompt, one change.

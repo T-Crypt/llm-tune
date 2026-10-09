@@ -9,8 +9,11 @@ skill ships a bench so you can check each number on your own hardware. Any
 agent that loads skills or reads rules files can run it.
 
 **Status: v0.2 (2026-10-08).** Scenario-tested and published. The bench scripts
-were fixed from a live run and have not been re-run since the fixes; commands
-marked "(untested here)" in `skill/bench/` have not been executed in this repo.
+were run in this repo on 2026-10-08 against a resident Qwen3.6-35B-A3B on a 24 GB
+card: `needle.py` held recall at 10/50/90% depth and `quality_probe.py` passed
+25/25 with zero budget failures (`tests/2026-10-08-bench/`). The `llama-bench`
+prefill sweep in `skill/bench/quick_bench.md` is still a generic command, not
+verified on this machine.
 
 ## Why
 
@@ -150,7 +153,7 @@ your own box):
 | Apple Silicon / MLX: cited sources, zero Apple runs | One load test plus a recall check fills the biggest gap |
 | Intel Arc / AMD: SYCL, HIP/ROCm, Vulkan all external | Engine-specific traps and fit data |
 | Multi-user serving | Batching, cache contention, concurrent models |
-| Bench commands: marked "(untested here)" | The measurement patterns are proven; the specific commands are generic llama.cpp |
+| Bench commands: marked "(untested here)" | `needle.py` and `quality_probe.py` ran in this repo on 2026-10-08 (`tests/2026-10-08-bench/`); the `llama-bench` and `llama-server` command lines are generic, confirm flags with `--help` |
 | Ollama, LM Studio, vLLM numbers | Method and traps transfer; the numbers do not |
 
 **Rules that are method, not measurement:** the intake order and "pick the
@@ -212,7 +215,7 @@ Grouped by purpose.
 |---|---|
 | `CONTRIBUTING.md` | Submission template, quality standards, ranked data needs |
 | `.github/ISSUE_TEMPLATE/measurement-report.md` | The issue template for quick data submissions |
-| `tests/` | Frozen scenario runs: prompts, answers, grading |
+| `tests/` | Frozen runs: scenario prompts, answers, grading, and the in-repo bench records in `2026-10-08-bench/` |
 | `docs/dev/` | Build plans and review notes |
 | `CHANGELOG.md` | What changed and when |
 | `assets/` | Banner source (SVG) and render (PNG) |

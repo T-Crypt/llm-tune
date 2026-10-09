@@ -8,7 +8,7 @@ Synthesized from the research dossier collection at `../research/` (12 dossiers,
 
 ---
 
-## The sm_89 landscape (summary)
+## sm_89 at a glance
 
 | Engine | sm_89 status | Fast paths available? | Key limitation |
 |---|---|---|---|
@@ -113,7 +113,7 @@ Synthesized from the research dossier collection at `../research/` (12 dossiers,
 
 ## Speculative decoding alternatives to MTP (sourced from `../research/eagle3-medusa-specforge.md` and `../research/dflash-pard.md`)
 
-llm-tune currently covers MTP (draft-multiple tokens per predict). The research collection reveals a richer speculative decoding landscape on sm_89:
+llm-tune currently covers MTP (draft-multiple tokens per predict). The research collection shows a wider set of speculative-decoding options on sm_89:
 
 ### Draft-model drafters (train a separate small model to draft)
 
@@ -125,7 +125,7 @@ llm-tune currently covers MTP (draft-multiple tokens per predict). The research 
 
 ### Parallel-draft methods (predict a block of tokens in one forward pass)
 
-| Method | Key insight | Backers | sm_89 status |
+| Method | What it changes | Backers | sm_89 status |
 |---|---|---|---|
 | **DFlash** | Block-diffusion drafter, KV-injection conditioning, per-layer injection. 5L/16-token draft is cheaper and better than EAGLE-3's 1L/8-token. | Z Lab / UC San Diego | Shipped in TensorRT-LLM (`decoding_type: PARD`/`DFlash`) |
 | **DFlash 2** | + path selector + two-tap dynamic convolution. "20% more output per verify pass, ~1% latency." | Inco AI | Available via SGLang `--spec dflash2` |

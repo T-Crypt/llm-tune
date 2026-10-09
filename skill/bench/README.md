@@ -37,18 +37,23 @@ Scripts (stdlib only):
   using the wired limit rather than total RAM. Estimates only; verify with a real load.
 
 Both request scripts work against any OpenAI-compatible server, including `mlx_lm.server`;
-confirm its flags with `--help` (untested here).
+confirm its flags with `--help`.
 
 Live-test fixes (2026-10-05): `needle.py` crashed on `str.format` with an expression inside
 the braces; `quality_probe.py` scored 0/2 on a thinking task because the 600-token answer cap
 was spent entirely on reasoning (`finish_reason: length`, empty content), the cap is now a
 flag with a 4096 default, and the empty-answer case is graded as BUDGET rather than fail. The
 refusal task was removed because the prompt itself contained the secret, so echoing it leaked
-nothing, and it named services specific to the source setup; it is replaced by a constraint-following task. The fixed
-versions have not been re-run here.
+nothing, and it named services specific to the source setup; it is replaced by a constraint-following task.
+
+In-repo run (2026-10-08): all three scripts were executed against a live server; raw output is
+in `tests/2026-10-08-bench/`. `needle.py` held recall at 10/50/90% depth and
+`quality_probe.py` passed 25/25 with zero BUDGET; `mlx_quant_search.py` returned its verdicts
+from the HF API. One default needed raising: a role that reasons spends a small answer cap on
+reasoning, so the run used `--max-tokens 8192`.
 
 Status: the memory-accounting, needle-at-depth, and repeat-run patterns are the ones the source machine
-actually ran (`references/tables/`). The specific commands in `quick_bench.md` are written for a
-generic llama.cpp install and have not been executed here, anything unrun is marked
-"(untested here)". Confirm flag names against `llama-bench --help` and `llama-server --help`
-on the user's build; flag names change between versions.
+actually ran (`references/tables/`). The `llama-bench` and `llama-server` command lines in
+`quick_bench.md` are written for a generic llama.cpp install; the parts run here are noted
+above. Confirm flag names against `llama-bench --help` and `llama-server --help` on the
+user's build; flag names change between versions.

@@ -3,8 +3,10 @@
 
 Stdlib only. Written from the two-tier method recorded in
 references/tables/quality-bench.md. The 600-token default that produced empty answers on a
-thinking model was found by a live run on 2026-10-05; this version fixes it, but has not been
-re-run here.
+thinking model was found by a live run on 2026-10-05; this version fixes it. Re-run in this
+repo on 2026-10-08: 25/25 at --max-tokens 8192 (records in ../tests/2026-10-08-bench/). A
+role with a reasoning budget needs an answer cap above that budget, or every run grades
+BUDGET.
 
 These graders check the model's ANSWER (structure, exact value, tool-call shape). They are
 the quick tier. The confidence tier runs a model's patch against a real test suite, which a
@@ -13,7 +15,7 @@ single-file probe cannot do.
   python3 quality_probe.py --url http://127.0.0.1:8080/v1/chat/completions --model local --runs 5
 
 Run one model at a time; every request loads or uses the resident model.
-Works against any OpenAI-compatible server, including mlx_lm.server (flags untested here).
+Works against any OpenAI-compatible server, including mlx_lm.server (its flags not verified here).
 """
 
 import argparse
