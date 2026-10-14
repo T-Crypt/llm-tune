@@ -127,3 +127,13 @@ Headroom 6 restores 3.53 GiB and keeps most of the long-prompt gain (-12% read a
 default, +10% decode at depth). Recall held at all four depths on every arm.
 
 Source: `state/evals/2026-10-04/strata-0139-512k/RESULTS.md`.
+
+## Table 8: post-v0.2 fit datapoints (raw, engine-specific)
+
+| Entry | Weights / peak | ctx | Result |
+|---|---|---|---|
+| Gemma4-26B-A4B-QAT (NInfer, sm_89 native) | 14.6 GiB weights | 131072 | loads; kv_capacity 131072 with kv_headroom_bytes=0 (zero headroom); tool-call ok |
+| Qwen3.6-35B-A3B UD-Q4_K_XL (llama.cpp, r15-agentfast fit probe) | load failed at ctx 200000/131072/65536+ with n_cpu_moe 0 | 131072+ | ruled out by the fit gate before tuning ran; UD-IQ4_XS (peak 22,572 MiB) used instead |
+| Qwen3.6-35B-A3B UD-Q4_K_XL | peak 23,924 MiB at ub1024 / 23,782 at ub512 | default probe ctx (no ctx field logged) | loads only with n_cpu_moe 6-7 in the probe ladder; still ruled out for the run (fit-fragile) |
+
+Source: `state/evals/2026-10-14/gemma4-ab/side-*.log`, `state/evals/2026-10-11/r15-agentfast/fit.jsonl`.

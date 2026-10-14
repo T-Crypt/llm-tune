@@ -143,3 +143,65 @@ Run-to-run spread inside each arm is +-20 t/s, so short-prompt decode is a wash;
 difference is the one that held across depths.
 
 Source: `state/evals/2026-10-03/strata-ctx/RESULTS.md`, `state/evals/2026-10-03/strata-512k-live/RESULTS.md`, `state/evals/2026-10-04/strata-0139-512k/RESULTS.md`.
+
+## Table 9: Strata #783 depth A/B, alternating engine-only change (IQ2_XS, live 262K q4_0, 2 rounds per arm, recall held)
+
+| Build | 119K prefill t/s | 119K decode t/s | 238K prefill t/s | 238K decode t/s | Recall |
+|---|---|---|---|---|---|
+| base (v0.1.39 + #700) | 4048 / 4044 | 106.2 / 106.6 | 3898 / 3898 | 126.7 / 127.3 | 4/4 |
+| + #783 | 4041 / 4031 | 121.8 / 121.5 | 3897 / 3889 | 138.9 / 139.3 | 4/4 |
+| + #783 + #796 | 4046 / 4046 | 121.6 / 121.5 | 3896 / 3904 | 139.4 / 138.6 | 4/4 |
+
+#783: decode at depth +14.2% at 119K, +9.5% at 238K; prompt reading unchanged. #796: no speed change (startup-safety value only). Engine-specific (Strata).
+
+Source: `state/evals/2026-10-04/strata-pr783-depth/RESULTS.md`.
+
+## Table 10: Strata 0.1.43 vs 0.1.39-based deploy, same 262K config (r17, 3 runs per variant, engine-specific)
+
+| Variant | Chat decode | Agent-session decode | 16K prompt prefill | 32K prompt prefill | Peak VRAM |
+|---|---|---|---|---|---|
+| A: deploy (0.1.39-based) | 133.6 t/s | 144.7 t/s | 3,757 t/s | 3,760 t/s | 23,776 MiB |
+| B: v0.1.43, same config | 134.8 (+0.9%) | 156.7 (+8.3%) | 3,978 (+5.9%) | 4,054 (+7.8%) | 23,778 MiB |
+| C: v0.1.43, no --pcie-frac | 141.8 (+6.1%) | 152.3 (+5.3%) | 3,957 | 4,033 | 23,778 MiB |
+
+B vs C within noise (C's measured PCIe share settled at 0.15-0.20, near the pinned 0.20). Deployed B. Engine-specific (Strata).
+
+Source: `state/evals/2026-10-11/r17-strata-0143/result.md`.
+
+## Table 11: NInfer v3 vs v2, same flags (INT8 prefill, rk4v4-e8 KV, MTP3, engine-specific)
+
+| Metric | v2 (deploy 46645ada) | v3 (port 322a7f51) | v3/v2 |
+|---|---|---|---|
+| prefill 2048 | 3403.7 t/s | 3462.5 t/s | 1.02 |
+| prefill 8192 | 3730.7 t/s | 3789.3 t/s | 1.02 |
+| prefill 32768 | 3501.1 t/s | 3550.2 t/s | 1.01 |
+| prefill 65536 | 3106.7 t/s | 3145.6 t/s | 1.01 |
+| decode (code, greedy, median of 3) | 157.5 t/s | 156.3 t/s | 0.99 |
+
+Parity identical (greedy); perplexity +0.007% vs A16 (4.343314 vs 4.343023); draft acceptance 88.7% vs 86.7%. Engine-specific (NInfer).
+
+Source: `state/evals/2026-10-11/v3-switch/result.md`.
+
+## Table 12: r14 head-to-head prefill at depth + decode (same box, production configs, n=2-3)
+
+| Size | NInfer-Qwen3.8-27B prefill | Strata IQ2_XS prefill | NInfer decode | Strata decode |
+|---|---|---|---|---|
+| 60K (55,586 tok) | 3,037 t/s (18.3 s prefill; 23.3 s logged incl. answer) | 3,494 t/s (17.3 s) | 127-140 t/s | 173-185 t/s |
+| 120K (117,153 tok) | 2,391 t/s (51.2 s) | 3,904 t/s (31.3 s) | | |
+| 200K (~199.5K tok) | 1,857 t/s (110.2 s) | 3,833 t/s (53.7 s) | | |
+
+Strata decodes ~35% faster and reads a 200K prompt 2.1x faster on this box. Needle recall 9/9 both (see quality-bench T16). Logged seconds are whole-request wall time (needle.py times the full chat call, answer generation included); prefill-only time is tokens / t/s - at 60K the NInfer engine log records TTFT 18.3 s vs total 23.3 s. Engine-specific.
+
+Source: `state/evals/2026-10-04/r14-ninfer-vs-strata/RESULTS.md`.
+
+## Table 13: Gemma4-26B-A4B-QAT speeds (NInfer engine, sm_89 native, 2026-10-14, n=2 builds)
+
+| Request | Prefill t/s | Decode t/s | MTP accept |
+|---|---|---|---|
+| build turn1 (prompt 619) | 4.28-4.29k | 330.8-357.4 | 72.0-77.2% |
+| build turn1 tool-call (prompt 176, output 4.7-6.1K) | 2.88-2.90k | 391.4-399.1 | 84.2-86.1% |
+| review probe (prompt 5.0-6.5K, output ~30) | 5.51-5.59k | 290.7-324.7 | 64.3-79.2% |
+
+Weights 14.6 GiB; kv_capacity 131072 with kv_headroom_bytes=0; tool-call ok. First non-Qwen family point. Engine-specific (NInfer).
+
+Source: `state/evals/2026-10-14/gemma4-ab/side-B.log`, `side-C.log`.

@@ -184,7 +184,7 @@ Grouped by purpose.
 | Path | Contents |
 |---|---|
 | `skill/references/evidence.md` | Index from each decision step to the tables behind it |
-| `skill/references/findings.md` | The generalisable lessons (32), each with its sources |
+| `skill/references/findings.md` | The generalisable lessons (35), each with its sources |
 | `skill/references/CORRECTIONS.md` | Where findings disagreed with the data; corrections win |
 | `skill/references/tables/` | One table per measurement set, extracted from the DATA-tagged sources |
 | `skill/references/hardware-tiers.md` | Every hardware class from 8 GB Intel Arc to 512 GB Mac Studio and DGX (sourced, not measured here) |
