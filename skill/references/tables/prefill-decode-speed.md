@@ -186,11 +186,11 @@ Source: `state/evals/2026-10-11/v3-switch/result.md`.
 
 | Size | NInfer-Qwen3.8-27B prefill | Strata IQ2_XS prefill | NInfer decode | Strata decode |
 |---|---|---|---|---|
-| 60K (55,586 tok) | 3,037 t/s (23.3 s) | 3,494 t/s (17.3 s) | 127-140 t/s | 173-185 t/s |
+| 60K (55,586 tok) | 3,037 t/s (18.3 s prefill; 23.3 s logged incl. answer) | 3,494 t/s (17.3 s) | 127-140 t/s | 173-185 t/s |
 | 120K (117,153 tok) | 2,391 t/s (51.2 s) | 3,904 t/s (31.3 s) | | |
 | 200K (~199.5K tok) | 1,857 t/s (110.2 s) | 3,833 t/s (53.7 s) | | |
 
-Strata decodes ~35% faster and reads a 200K prompt 2.1x faster on this box. Needle recall 9/9 both (see quality-bench T16). Engine-specific.
+Strata decodes ~35% faster and reads a 200K prompt 2.1x faster on this box. Needle recall 9/9 both (see quality-bench T16). Logged seconds are whole-request wall time (needle.py times the full chat call, answer generation included); prefill-only time is tokens / t/s - at 60K the NInfer engine log records TTFT 18.3 s vs total 23.3 s. Engine-specific.
 
 Source: `state/evals/2026-10-04/r14-ninfer-vs-strata/RESULTS.md`.
 
