@@ -270,6 +270,52 @@ Changes (model-tuning-relevant headings):
 
 ---
 
+## state/evals/2026-10-04 (promoted 2026-10-14)
+
+### state/evals/2026-10-04/strata-pr783-depth/RESULTS.md: Strata #783 depth A/B, alternating engine-only change
+- **Measured:** base vs +#783 vs +#783+#796, 2 rounds each, 119K/238K decode at depth + recall; #783 +14.2% (119K) / +9.5% (238K) decode, prefill unchanged, recall 4/4 all arms.
+- **Tag:** FINDING (engine version is a tuning variable) + DATA (tabulated in `skill/references/tables/prefill-decode-speed.md` T9).
+
+### state/evals/2026-10-04/strata-calib/RESULTS.md: short-prompt calibration vs depth
+- **Measured:** calibrate.py short prompts picked pcie-frac 0.20 + spec-min-p 0.70; depth harness shows spec-min-p 0.70 costs decode at depth, learned-from-short-prompts profile -20% at 119K; live is pcie-frac 0.20 + spec-min-p 0.5.
+- **Tag:** FINDING (calibration caveat) — short-prompt calibration does not transfer to depth.
+
+### state/evals/2026-10-04/r14-ninfer-vs-strata/RESULTS.md: NInfer-27B vs Strata IQ2_XS head-to-head, quick tier + needle
+- **Measured:** n=2-3 per model; review tie (12,10 vs 12,10,9), needle 9/9 both to 200K; Strata ~35% faster decode, 2.1x faster 200K read; NInfer one-shot builds ~1.7x larger/richer.
+- **Tag:** DATA (tabulated in prefill-decode-speed T12, quality-bench T16) + FINDING (report t/s AND quality; preliminary, n=2-3).
+
+### state/evals/2026-10-04/r15-real-tasks/RESULTS.md: real-ticket graded stage 2
+- **Measured:** 3 real tickets, Claude-graded 5 axes; NInfer 112/150 (2/3 finished in cap), Strata 86/150 (1/3). Quick-tier tie broke only on real tasks.
+- **Tag:** FINDING (tie-break by real tasks; preliminary, n=1 task set) + DATA (quality-bench T17).
+
+### state/evals/2026-10-04/strata-0139-512k/RESULTS.md: engine-upgrade RAM pinning (already tabulated as vram-fit T7)
+- **Measured:** 0.1.39 pinned 17.24→19.20 GiB, min free 3.36→1.41 GiB; headroom 6 restores 3.53 GiB.
+- **Tag:** FINDING (already finding 31; numbers now also in SKILL.md Step 4 trap).
+
+## state/evals/2026-10-10/2026-10-11 (promoted 2026-10-14)
+
+### state/evals/2026-10-11/r17-strata-0143/result.md: Strata 0.1.43 vs 0.1.39-based deploy
+- **Measured:** same 262K config, 3 runs per variant; agent-session decode +8.3%, prefill +6-8% at 16-32K, peak VRAM unchanged (23,778 vs 23,776 MiB). Deployed B.
+- **Tag:** DATA (prefill-decode-speed T10) + FINDING (engine-version A/B, quality held).
+
+### state/evals/2026-10-11/v3-switch/result.md: NInfer v3 vs v2
+- **Measured:** prefill +1-2%, decode -0.8% (156.3 vs 157.5 t/s), acceptance 88.7% vs 86.7%, PPL +0.007% vs A16, greedy parity identical.
+- **Tag:** DATA (prefill-decode-speed T11, speculative-mtp T7).
+
+### state/evals/2026-10-11/r15-agentfast/result.md + fit.jsonl: template/sampler token efficiency + fit gate
+- **Measured:** n=1 per variant; Sharp temp 0.6 same 10/12 in -18% tokens; presence 1.5 cuts MTP accept 89→84.2%, decode 308→254 t/s. Q4_K_XL ruled out by fit gate before tuning ran.
+- **Tag:** DATA (speculative-mtp T7, vram-fit T8) — sampler rows preliminary, needs repeats.
+
+### state/evals/2026-10-10/v3-agent/RESULT.md: chat-template effort trap
+- **Measured:** v3 400 `invalid_prompt` because jinja refuses effort `high` (what Claude Code sends); fix maps high/max→xhigh, minimal→low.
+- **Tag:** FINDING (effort sets differ per template/engine; SKILL.md Step 7 trap).
+
+## state/evals/2026-10-14 (promoted 2026-10-14)
+
+### state/evals/2026-10-14/gemma4-ab/side-*.log + repro JSON: Gemma4-26B-A4B-QAT first point
+- **Measured:** NInfer engine, sm_89 native; 14.6 GiB weights, kv_capacity 131072 with kv_headroom_bytes=0; decode 330-400 t/s, MTP 72-86%, tool-call ok. Review 8-9 (preliminary, n=1 per arm).
+- **Tag:** DATA (prefill-decode-speed T13, speculative-mtp T7, vram-fit T8, quality-bench T18). First non-Qwen family point.
+
 ## External verification sources (cited in `references/`)
 
 These are web sources verified live (2026-10-08) and cited in the new reference files. None are measurements from this repo; all are externally sourced and must be verified on the user's own hardware.

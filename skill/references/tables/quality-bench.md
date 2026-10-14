@@ -228,3 +228,42 @@ Source: role-suite results JSON at the `state/evals/` root, dated 2026-09-25 (th
 The same models failed a real multi-turn build (see Table 4: Coder-Pruned 0/8; GAIN hit the length cap with no build; Mini skipped the tool call), the suite could not see it.
 
 Source: `reference/llama-swap/config.yaml` (header comment, 2026-09-23).
+
+## Table 16: r14 head-to-head quality (same harness, same prompts, n=2-3 per model — preliminary)
+
+| Run | Model | Review /12 | Build CSS rules / props | Decode t/s |
+|---|---|---|---|---|
+| r14n-a | NInfer-Qwen3.8-27B | 12/12 | 181 / 379 | 140 |
+| r14n-b | NInfer-Qwen3.8-27B | 10/12 | 190 / 405 | 127 |
+| r14s-a | Strata IQ2_XS | 12/12 | 113 / 271 | 173 |
+| r14s-b | Strata IQ2_XS | 10/12 | 108 / 241 | 182 |
+| r14s-n | Strata IQ2_XS | 9/12 | 106 / 250 | 185 |
+
+Review: tie (both 12 then 10; Strata third run 9/12 within ±2 noise). Needle recall 9/9 both to 200K. NInfer one-shot builds ~1.7x larger/richer (181-190 vs 106-113 rules); size is a proxy, not a judged score.
+
+Source: `state/evals/2026-10-04/r14-ninfer-vs-strata/RESULTS.md`.
+
+## Table 17: r15 real-task graded outcomes (3 real tickets, Claude-graded 0-10 x5 axes, same tools both engines)
+
+| Task | Strata IQ2_XS | NInfer-Qwen3.8-27B |
+|---|---|---|
+| T1 homelab Python | 42 (done, committed, unreported at cap) | 35 (done, 72 min) |
+| T2 Aphotic QML | 0 (nothing written at 150-min cap) | 34 (complete at 80 min, died before commit) |
+| T3 llm-tune evidence | 44 (done, 120 min) | 43 (done, 62 min) |
+| Total /150 | 86 | 112 |
+
+Quick-tier tie (T16) broke only on real tasks: NInfer finished 2/3 within cap, Strata 1/3. n=1 task set — preliminary.
+
+Source: `state/evals/2026-10-04/r15-real-tasks/RESULTS.md`.
+
+## Table 18: Gemma4-26B-A4B-QAT review (planted-bug suite, NInfer engine, 2026-10-14 — preliminary)
+
+| Run | Review found (raw count, NOT /12 — non-comparable to T16) | Tool-call |
+|---|---|---|
+| gemma4-review (earlier pass) | 8 | n/a |
+| gemma4-ab sampler arm | 9 | ok (tool_calls finish) |
+| gemma4-ab thinkmax arm | 8 | ok (tool_calls finish) |
+
+First non-Qwen family quality point; raw counts are non-comparable to the /12 tables (T4–T17) — harness denominator unknown from the source as logged, do not compare across tables. n=1 per arm — preliminary.
+
+Source: `state/evals/2026-10-14/gemma4-review/review2/Gemma4-26B-A4B-QAT.md`, `state/evals/2026-10-14/gemma4-ab/review2/*.md`.

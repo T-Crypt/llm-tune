@@ -123,7 +123,9 @@ Run the steps in order. Each step: the rule, the evidence, the trap, how to veri
   desktop compositor to the iGPU is a real lever on a shared card. **Re-measure host RAM
   headroom after every engine upgrade**: defaults that pin memory can change: an upgrade grew
   the default page-locked copy from 17.24 to 19.20 GiB and cut min free RAM at a 477K prompt
-  from 3.36 to 1.41 GiB on the same box and config, with no change in VRAM.
+  from 3.36 to 1.41 GiB on the same box and config, with no change in VRAM. A headroom
+  setting of 6 GiB (`STRATA_RESIDENT_HEADROOM_GIB`) restored 3.53 GiB and kept most of the
+  long-prompt gain. Engine-specific numbers.
 - **Verify:** peak host RAM and peak VRAM per run, plus the engine's slot/pinned figures, before
   and after any engine upgrade.
 
@@ -151,7 +153,9 @@ Run the steps in order. Each step: the rule, the evidence, the trap, how to veri
 - **Evidence:** `references/tables/speculative-mtp.md` T1–T5; findings 2 (corrected), 11, 12, 13.
 - **Trap:** the draft context is a separate allocation that can OOM even when the target model
   fits. That is the measured fact. Do not claim it grows during generation; the measured runtime
-  growth is the compute buffers (finding 5). MTP compatibility depends
+  growth is the compute buffers (finding 5). Short-prompt calibration does not transfer to depth:
+  a calibrator's pick of spec-min-p 0.70 cost decode at 119K/238K and a profile learned from short
+  prompts cost ~20% at 119K; verify any calibrated spec setting at depth before promoting (finding 34). MTP compatibility depends
   on exact builder/commit: flag names changed between builds (`--draft-max` removed →
   `--spec-draft-n-max`), so pin versions. Auto-fit and manual offload are mutually exclusive:
   `common_fit_params` aborts when `-ngl` is already set.
@@ -179,7 +183,10 @@ Run the steps in order. Each step: the rule, the evidence, the trap, how to veri
   length cap and produced nothing reviewable).
 - **Trap:** on models whose template implements a `reasoning_effort` switch, `medium` is a silent
   mode that injects nothing; only the default (xhigh) injects reasoning instructions, and an
-  invalid value hard-fails the template render. `--jinja` is required for template-driven kwargs
+  invalid value hard-fails the template render. Effort value sets differ per template/engine: one
+  engine's jinja refused effort `high` (HTTP 400, client hung with no retry); the fix mapped
+  high/max to xhigh and minimal to low. Check the effort values against the template in use.
+  `--jinja` is required for template-driven kwargs
   to work at all. None of this applies to a model that has no such switch.
 - **Verify:** finish_reason per run. `finish=length` with no content is a budget failure, not a
   model failure; several models scored 0/8 in round 1 for exactly that.

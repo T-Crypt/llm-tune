@@ -118,4 +118,21 @@ Source: `state/evals/2026-10-03/ninfer-sweep1/results.jsonl`.
 
 Source: `state/evals/2026-10-03/strata-k8v4/sweep.jsonl` (`engine_mem_lines`).
 
+## Table 7: post-v0.2 acceptance datapoints (engine-specific, raw)
+
+| Source | Arm | Acceptance | Decode | Note |
+|---|---|---|---|---|
+| NInfer v3-switch | v2 | 86.7% | 157.5 t/s | greedy parity identical |
+| NInfer v3-switch | v3 | 88.7% | 156.3 t/s (-0.8%) | prefill +1-2%, PPL +0.007% vs A16 |
+| Gemma4-26B-A4B-QAT (NInfer, 2026-10-14) | build turn1 | 72.0-77.2% | 330.8-357.4 t/s | weights 14.6 GiB |
+| Gemma4-26B-A4B-QAT (NInfer, 2026-10-14) | build tool-call turn | 84.2-86.1% | 391.4-399.1 t/s | tool-call ok |
+| Gemma4-26B-A4B-QAT (NInfer, 2026-10-14) | review probe | 64.3-79.2% | 290.7-324.7 t/s | short output |
+| r15-agentfast AF-base (n=1, preliminary) | temp 0.6, qwen3.6 template | 89.0% | 308 t/s | review 10/12 |
+| r15-agentfast AF-sharp (n=1, preliminary) | temp 0.6, Sharp template | 88.5% | 309 t/s | same 10/12 in -18% tokens |
+| r15-agentfast AF-sharp-general (n=1, preliminary) | temp 1.0, presence 1.5 | 84.2% | 254 t/s | build thinned (62 vs 116 rules), not for this entry |
+
+Sampler/acceptance rows are n=1 — preliminary, needs repeats before promotion.
+
+Source: `state/evals/2026-10-11/v3-switch/result.md`, `state/evals/2026-10-14/gemma4-ab/side-*.log`, `state/evals/2026-10-11/r15-agentfast/result.md`.
+
 Reference datapoint (model card, not measured here): Q4_K_S regular ~75 t/s vs MTP >90 t/s at 60% acceptance, 2 tokens, roughly +20% at 60% acceptance; the ratio, not the absolute t/s, is the transferable part. Gate: below ~50% acceptance, regular quants run faster. Source: `state/evals/2026-09-25/gain-research.md` (Note 3), `runbooks/llama-swap.md` (bench gate >= 0.4).
